@@ -7,7 +7,7 @@ export const brands: Brand[] = [
     slug: 'yumeki',
     logo: 'https://xwuvbztgpwhbwohontuh.supabase.co/storage/v1/object/public/umeki_products/yumeki_logo.png',
     banner: 'https://xwuvbztgpwhbwohontuh.supabase.co/storage/v1/object/public/umeki_products/yumki_cover_banner.png',
-    description: '일본 감성의 유니크한 패션 아이템을 만나보세요. 트렌디하고 감각적인 스타일을 제안합니다.',
+    description: '댄서 유메키의 공식 굿즈샵입니다. 유메키와 함께하는 특별한 아이템을 만나보세요.',
     featured: true,
   },
   // {
