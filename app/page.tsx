@@ -60,7 +60,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Products - 추천 상품을 브랜드보다 위로 이동 */}
-      <section className="py-20 bg-white">
+      <section className="py-10 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-10">
             <div>
@@ -77,7 +77,7 @@ export default function HomePage() {
               </svg>
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -86,7 +86,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Brands */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-10 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-10">
             <div>
@@ -112,7 +112,7 @@ export default function HomePage() {
       </section>
 
       {/* Trust Badges */}
-      <section className="py-16 bg-white border-t border-gray-100">
+      {/* <section className="py-16 bg-white border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -129,7 +129,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }

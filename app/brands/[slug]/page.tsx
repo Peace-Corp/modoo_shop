@@ -26,7 +26,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
   const products = getProductsByBrandId(brand.id);
 
   return (
-    <div className="py-8">
+    <div className="pb-8">
       {/* Brand Header */}
       <div className="relative h-64 md:h-80">
         <Image
@@ -37,9 +37,9 @@ export default async function BrandPage({ params }: BrandPageProps) {
           priority
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-8">
-          <div className="max-w-7xl mx-auto flex items-end gap-6">
-            <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden border-4 border-white shadow-lg bg-white">
+        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8">
+          <div className="max-w-7xl mx-auto flex items-end gap-3 sm:gap-6">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-24 md:h-24 rounded-full overflow-hidden border-2 sm:border-4 border-white shadow-lg bg-white shrink-0">
               <Image
                 src={brand.logo}
                 alt={brand.name}
@@ -48,9 +48,9 @@ export default async function BrandPage({ params }: BrandPageProps) {
                 className="object-cover w-full h-full"
               />
             </div>
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{brand.name}</h1>
-              <p className="text-gray-200 max-w-2xl">{brand.description}</p>
+            <div className="min-w-0">
+              <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">{brand.name}</h1>
+              <p className="text-xs sm:text-base text-gray-200 max-w-2xl line-clamp-2">{brand.description}</p>
             </div>
           </div>
         </div>
@@ -77,7 +77,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
         </div>
 
         {products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {products.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
