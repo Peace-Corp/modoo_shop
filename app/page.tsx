@@ -111,59 +111,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Categories Grid */}
-      {/* <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">카테고리별 쇼핑</h2>
-            <p className="mt-2 text-gray-600">원하는 상품을 쉽게 찾아보세요</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {[
-              { name: '아우터', icon: '🧥', color: 'from-pink-500 to-rose-500' },
-              { name: '상의', icon: '👕', color: 'from-blue-500 to-cyan-500' },
-              { name: '하의', icon: '👖', color: 'from-purple-500 to-pink-500' },
-              { name: '액세서리', icon: '💍', color: 'from-green-500 to-emerald-500' },
-              { name: '가방', icon: '👜', color: 'from-orange-500 to-amber-500' },
-              { name: '모자', icon: '🧢', color: 'from-indigo-500 to-purple-500' },
-            ].map((category) => (
-              <Link
-                key={category.name}
-                href={`/search?category=${encodeURIComponent(category.name)}`}
-                className="group relative overflow-hidden rounded-2xl aspect-square flex flex-col items-center justify-center p-4 transition-all duration-300 hover:scale-105"
-              >
-                <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-90`} />
-                <span className="relative text-4xl mb-2">{category.icon}</span>
-                <span className="relative text-white font-semibold">{category.name}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section> */}
-
-      {/* Newsletter */}
-      {/* <section className="py-20 bg-gradient-to-br from-indigo-600 to-purple-700">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">소식 받아보기</h2>
-          <p className="text-indigo-100 mb-8 max-w-2xl mx-auto">
-            뉴스레터를 구독하고 신상품, 할인 정보, 특별 이벤트 소식을 가장 먼저 받아보세요.
-          </p>
-          <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="이메일 주소를 입력하세요"
-              className="flex-1 px-5 py-3 rounded-xl border-0 focus:ring-2 focus:ring-white/50 focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="px-8 py-3 bg-white text-indigo-600 font-semibold rounded-xl hover:bg-gray-100 transition-colors"
-            >
-              구독하기
-            </button>
-          </form>
-        </div>
-      </section> */}
-
       {/* Trust Badges */}
       <section className="py-16 bg-white border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
