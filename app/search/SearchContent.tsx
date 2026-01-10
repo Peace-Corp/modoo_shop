@@ -76,14 +76,14 @@ export default function SearchContent() {
   };
 
   return (
-    <div className="py-8">
+    <div className="py-4 sm:py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">상품 검색</h1>
+        <div className="mb-4 sm:mb-8">
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">상품 검색</h1>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative">
               <svg
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -93,16 +93,16 @@ export default function SearchContent() {
               <input
                 type="text"
                 placeholder="상품명, 브랜드, 카테고리 검색..."
-                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full pl-9 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="md:hidden flex items-center justify-center px-4 py-3 border border-gray-300 rounded-xl hover:bg-gray-50"
+              className="md:hidden flex items-center justify-center px-3 sm:px-4 py-2 sm:py-3 text-sm border border-gray-300 rounded-lg sm:rounded-xl hover:bg-gray-50"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
               필터
@@ -110,7 +110,7 @@ export default function SearchContent() {
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-8">
           <div className={`lg:w-64 shrink-0 ${showFilters ? 'block' : 'hidden lg:block'}`}>
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-24">
               <div className="flex items-center justify-between mb-6">
@@ -220,8 +220,8 @@ export default function SearchContent() {
           </div>
 
           <div className="flex-1">
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-gray-600">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <p className="text-sm sm:text-base text-gray-600">
                 총 <span className="font-semibold text-gray-900">{filteredProducts.length}</span>개 상품
               </p>
               <select
@@ -238,7 +238,7 @@ export default function SearchContent() {
             </div>
 
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                 {filteredProducts.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}

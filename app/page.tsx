@@ -12,7 +12,7 @@ export default function HomePage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-[600px] flex items-center overflow-hidden">
+      <section className="relative h-100 md:h-150 flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=1080&fit=crop"
@@ -25,32 +25,32 @@ export default function HomePage() {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="max-w-xl">
-            <span className="inline-block px-4 py-1.5 bg-indigo-600/90 text-white text-sm font-medium rounded-full mb-6">
+            <span className="inline-block px-3 py-1 md:px-4 md:py-1.5 bg-indigo-600/90 text-white text-xs md:text-sm font-medium rounded-full mb-4 md:mb-6">
               신상품 컬렉션
             </span>
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight">
               특별한 브랜드<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
                 특별한 상품
               </span>
             </h1>
-            <p className="text-lg text-gray-200 mb-8">
+            <p className="text-sm md:text-lg text-gray-200 mb-6 md:mb-8">
               유메키샵, 사람의탈, 눙눙이의 겨울까지.
               감성 가득한 브랜드들의 특별한 상품을 만나보세요.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-3 md:gap-4">
               <Link
                 href="/brands"
-                className="inline-flex items-center px-8 py-4 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-colors"
+                className="inline-flex items-center px-5 py-2.5 md:px-8 md:py-4 bg-indigo-600 text-white text-sm md:text-base font-semibold rounded-xl hover:bg-indigo-700 transition-colors"
               >
                 브랜드 둘러보기
-                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 md:w-5 md:h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
               <Link
                 href="/search"
-                className="inline-flex items-center px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl hover:bg-white/20 transition-colors border border-white/20"
+                className="inline-flex items-center px-5 py-2.5 md:px-8 md:py-4 bg-white/10 backdrop-blur-sm text-white text-sm md:text-base font-semibold rounded-xl hover:bg-white/20 transition-colors border border-white/20"
               >
                 상품 검색하기
               </Link>
