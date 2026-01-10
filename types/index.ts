@@ -1,0 +1,89 @@
+// Product Types
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  originalPrice?: number;
+  images: string[];
+  brandId: string;
+  category: string;
+  stock: number;
+  rating: number;
+  reviewCount: number;
+  tags: string[];
+  createdAt: string;
+  featured?: boolean;
+}
+
+// Brand Types
+export interface Brand {
+  id: string;
+  name: string;
+  slug: string;
+  logo: string;
+  banner: string;
+  description: string;
+  featured?: boolean;
+}
+
+// User Types
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  avatar?: string;
+  role: 'user' | 'admin';
+  createdAt: string;
+  address?: Address;
+}
+
+export interface Address {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  phone: string;
+}
+
+// Cart Types
+export interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+export interface Cart {
+  items: CartItem[];
+  total: number;
+}
+
+// Order Types
+export interface Order {
+  id: string;
+  userId: string;
+  items: CartItem[];
+  total: number;
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  paymentMethod: 'toss' | 'paypal';
+  paymentStatus: 'pending' | 'completed' | 'failed';
+  shippingAddress: Address;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Admin Dashboard Types
+export interface SalesData {
+  date: string;
+  revenue: number;
+  orders: number;
+}
+
+export interface DashboardStats {
+  totalRevenue: number;
+  totalOrders: number;
+  totalProducts: number;
+  totalUsers: number;
+  recentOrders: Order[];
+  salesData: SalesData[];
+}
