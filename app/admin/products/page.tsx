@@ -124,10 +124,10 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
-                        <p className="font-medium text-gray-900">${product.price.toFixed(2)}</p>
+                        <p className="font-medium text-gray-900">{product.price.toLocaleString()}</p>
                         {product.originalPrice && (
                           <p className="text-sm text-gray-400 line-through">
-                            ${product.originalPrice.toFixed(2)}
+                            {product.originalPrice.toLocaleString()}
                           </p>
                         )}
                       </div>
@@ -216,14 +216,12 @@ export default function AdminProductsPage() {
                 <Input
                   label="Price"
                   type="number"
-                  step="0.01"
                   defaultValue={editingProduct?.price}
                   required
                 />
                 <Input
                   label="Original Price (optional)"
                   type="number"
-                  step="0.01"
                   defaultValue={editingProduct?.originalPrice}
                 />
               </div>

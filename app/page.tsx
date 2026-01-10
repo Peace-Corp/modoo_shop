@@ -112,7 +112,7 @@ export default function HomePage() {
       </section>
 
       {/* Categories Grid */}
-      <section className="py-20 bg-white">
+      {/* <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900">카테고리별 쇼핑</h2>
@@ -139,10 +139,10 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Newsletter */}
-      <section className="py-20 bg-gradient-to-br from-indigo-600 to-purple-700">
+      {/* <section className="py-20 bg-gradient-to-br from-indigo-600 to-purple-700">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">소식 받아보기</h2>
           <p className="text-indigo-100 mb-8 max-w-2xl mx-auto">
@@ -162,7 +162,7 @@ export default function HomePage() {
             </button>
           </form>
         </div>
-      </section>
+      </section> */}
 
       {/* Trust Badges */}
       <section className="py-16 bg-white border-t border-gray-100">
