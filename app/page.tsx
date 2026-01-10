@@ -12,7 +12,7 @@ export default function HomePage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-100 md:h-150 flex items-center overflow-hidden">
+      <section className="relative aspect-4/3 sm:aspect-video md:aspect-21/9 flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=1080&fit=crop"
