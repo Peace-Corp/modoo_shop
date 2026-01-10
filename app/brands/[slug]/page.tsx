@@ -96,7 +96,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
       </div>
 
       {/* Brand Story */}
-      <div className="bg-gray-50 py-16 mt-8">
+      {/* <div className="bg-gray-50 py-16 mt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12">
             <div className="max-w-3xl mx-auto text-center">
@@ -124,7 +124,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

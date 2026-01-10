@@ -15,44 +15,34 @@ export default function HomePage() {
       <section className="relative aspect-4/3 sm:aspect-video md:aspect-21/9 flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&h=1080&fit=crop"
+            src="https://xwuvbztgpwhbwohontuh.supabase.co/storage/v1/object/public/umeki_products/hero_banner_image.png"
             alt="히어로 배경"
             fill
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+        <div className="relative max-w-7xl px-10 sm:px-10 lg:px-10 z-10">
           <div className="max-w-xl">
-            <span className="inline-block px-3 py-1 md:px-4 md:py-1.5 bg-indigo-600/90 text-white text-xs md:text-sm font-medium rounded-full mb-4 md:mb-6">
-              신상품 컬렉션
+            <span className="inline-block px-3 py-1 md:px-4 md:py-1.5 bg-[#0052cc] text-white text-xs md:text-sm font-medium rounded-full mb-4 md:mb-6">
+              신상품
             </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight">
-              특별한 브랜드<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
-                특별한 상품
-              </span>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+              유메키샵 신상<br />
             </h1>
-            <p className="text-sm md:text-lg text-gray-200 mb-6 md:mb-8">
-              유메키샵, 사람의탈, 눙눙이의 겨울까지.
-              감성 가득한 브랜드들의 특별한 상품을 만나보세요.
+            <p className="text-sm md:text-lg text-gray-200 mb-4 md:mb-8">
+              댄서 유메키의 신상 공식 굿즈를 만나보세요.
             </p>
             <div className="flex flex-wrap gap-3 md:gap-4">
               <Link
-                href="/brands"
-                className="inline-flex items-center px-5 py-2.5 md:px-8 md:py-4 bg-indigo-600 text-white text-sm md:text-base font-semibold rounded-xl hover:bg-indigo-700 transition-colors"
+                href="/brands/yumeki"
+                className="inline-flex items-center px-5 py-2.5 md:px-8 md:py-4 bg-[#0052cc] text-white text-sm md:text-base font-semibold rounded-xl hover:bg-indigo-700 transition-colors"
               >
-                브랜드 둘러보기
+                구매하러 가기
                 <svg className="w-4 h-4 md:w-5 md:h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-              </Link>
-              <Link
-                href="/search"
-                className="inline-flex items-center px-5 py-2.5 md:px-8 md:py-4 bg-white/10 backdrop-blur-sm text-white text-sm md:text-base font-semibold rounded-xl hover:bg-white/20 transition-colors border border-white/20"
-              >
-                상품 검색하기
               </Link>
             </div>
           </div>
@@ -69,7 +59,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/search"
-              className="text-indigo-600 font-medium hover:underline flex items-center"
+              className="text-[#0052cc] font-medium hover:underline flex items-center"
             >
               전체보기
               <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,7 +85,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/brands"
-              className="text-indigo-600 font-medium hover:underline flex items-center"
+              className="text-[#0052cc] font-medium hover:underline flex items-center"
             >
               전체보기
               <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

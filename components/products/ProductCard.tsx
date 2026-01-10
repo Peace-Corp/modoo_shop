@@ -34,7 +34,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
         {product.featured && (
-          <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-indigo-600 text-white text-[10px] sm:text-xs font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full">
+          <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-[#0052cc] text-white text-[10px] sm:text-xs font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full">
             추천
           </div>
         )}
@@ -52,7 +52,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
       <div className="p-2 sm:p-4">
         {brand && (
-          <p className="text-[10px] sm:text-xs font-medium text-indigo-600 mb-0.5 sm:mb-1">{brand.name}</p>
+          <p className="text-[10px] sm:text-xs font-medium text-[#0052cc] mb-0.5 sm:mb-1">{brand.name}</p>
         )}
         <h3 className="text-xs sm:text-base font-semibold text-gray-900 mb-0.5 sm:mb-1 line-clamp-1 group-hover:text-indigo-600 transition-colors">
           {product.name}
