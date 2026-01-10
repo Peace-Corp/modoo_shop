@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Modoo Shop - Premium Multi-Brand Shopping Mall",
-  description: "Discover premium brands and products at Modoo Shop. Your one-stop destination for luxury fashion, electronics, beauty, sports, and more.",
+  title: "모두굿즈 | Modoo Goods",
+  description: "다양한 굿즈를 한곳에서 구매해보세요.",
 };
 
 export default function RootLayout({

@@ -5,10 +5,10 @@ export default function BrandsPage() {
   return (
     <div className="py-8">
       {/* Header */}
-      <div className="bg-gradient-to-br from-indigo-600 to-purple-700 py-16">
+      <div className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">입점 브랜드</h1>
-          <p className="text-indigo-100 max-w-2xl mx-auto">
+          <h1 className="text-4xl font-bold mb-4">입점 브랜드</h1>
+          <p className="text-black/40 max-w-2xl mx-auto">
             엄선된 프리미엄 브랜드들을 만나보세요.
             품질, 스타일, 고객 만족을 최우선으로 선정했습니다.
           </p>

@@ -38,7 +38,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-        <button
+        {/* <button
           onClick={(e) => {
             e.preventDefault();
             addToCart(product);
@@ -46,7 +46,7 @@ export function ProductCard({ product }: ProductCardProps) {
           className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-white text-gray-900 px-4 py-2 rounded-lg font-medium opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 hover:bg-indigo-600 hover:text-white shadow-lg"
         >
           장바구니 담기
-        </button>
+        </button> */}
       </div>
 
       <Link href={`/products/${product.id}`} className="block p-4">
