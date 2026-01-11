@@ -36,7 +36,7 @@ export default function HomePage() {
             </p>
             <div className="flex flex-wrap gap-3 md:gap-4">
               <Link
-                href="/brands/yumeki"
+                href="https://www.youmakeit.shop"
                 className="inline-flex items-center px-5 py-2.5 md:px-8 md:py-4 bg-[#0052cc] text-white text-sm md:text-base font-semibold rounded-xl hover:bg-indigo-700 transition-colors"
               >
                 구매하러 가기
