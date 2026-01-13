@@ -1,14 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Product } from '@/types';
-import { getBrandById } from '@/data/brands';
+import { Product, Brand } from '@/types';
 
 interface ProductCardProps {
   product: Product;
+  brand?: Brand;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
-  const brand = getBrandById(product.brandId);
+export function ProductCard({ product, brand }: ProductCardProps) {
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;

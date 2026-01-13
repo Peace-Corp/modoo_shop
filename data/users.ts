@@ -1,178 +1,209 @@
-import { User, Order, SalesData, DashboardStats } from '@/types';
+import { User, Order, SalesData, DashboardStats, Address } from '@/types';
+import { createServerClient } from '@/lib/supabase';
+import { Tables } from '@/lib/database.types';
 
-export const users: User[] = [
-  {
-    id: 'user-1',
-    email: 'admin@modoo.shop',
-    name: 'Admin User',
-    role: 'admin',
-    createdAt: '2024-01-01',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
-  },
-  {
-    id: 'user-2',
-    email: 'john@example.com',
-    name: 'John Doe',
-    role: 'user',
-    createdAt: '2024-01-15',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop',
-    address: {
-      street: '123 Main Street',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10001',
-      country: 'USA',
-      phone: '+1-555-0101',
-    },
-  },
-  {
-    id: 'user-3',
-    email: 'sarah@example.com',
-    name: 'Sarah Johnson',
-    role: 'user',
-    createdAt: '2024-01-20',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
-    address: {
-      street: '456 Oak Avenue',
-      city: 'Los Angeles',
-      state: 'CA',
-      zipCode: '90001',
-      country: 'USA',
-      phone: '+1-555-0102',
-    },
-  },
-  {
-    id: 'user-4',
-    email: 'mike@example.com',
-    name: 'Mike Wilson',
-    role: 'user',
-    createdAt: '2024-02-01',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
-  },
-  {
-    id: 'user-5',
-    email: 'emma@example.com',
-    name: 'Emma Davis',
-    role: 'user',
-    createdAt: '2024-02-05',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
-  },
-];
+type ProfileRow = Tables<'profiles'>;
+type OrderRow = Tables<'orders'>;
+type SalesDataRow = Tables<'sales_data'>;
+type AddressRow = Tables<'addresses'>;
 
-export const orders: Order[] = [
-  {
-    id: 'order-1',
-    userId: 'user-2',
-    items: [],
-    total: 649.98,
-    status: 'delivered',
-    paymentMethod: 'toss',
-    paymentStatus: 'completed',
-    shippingAddress: {
-      street: '123 Main Street',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10001',
-      country: 'USA',
-      phone: '+1-555-0101',
-    },
-    createdAt: '2024-02-01',
-    updatedAt: '2024-02-05',
-  },
-  {
-    id: 'order-2',
-    userId: 'user-3',
-    items: [],
-    total: 429.98,
-    status: 'shipped',
-    paymentMethod: 'paypal',
-    paymentStatus: 'completed',
-    shippingAddress: {
-      street: '456 Oak Avenue',
-      city: 'Los Angeles',
-      state: 'CA',
-      zipCode: '90001',
-      country: 'USA',
-      phone: '+1-555-0102',
-    },
-    createdAt: '2024-02-08',
-    updatedAt: '2024-02-10',
-  },
-  {
-    id: 'order-3',
-    userId: 'user-2',
-    items: [],
-    total: 189.99,
-    status: 'processing',
-    paymentMethod: 'toss',
-    paymentStatus: 'completed',
-    shippingAddress: {
-      street: '123 Main Street',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10001',
-      country: 'USA',
-      phone: '+1-555-0101',
-    },
-    createdAt: '2024-02-12',
-    updatedAt: '2024-02-12',
-  },
-  {
-    id: 'order-4',
-    userId: 'user-4',
-    items: [],
-    total: 549.99,
-    status: 'pending',
-    paymentMethod: 'paypal',
-    paymentStatus: 'pending',
-    shippingAddress: {
-      street: '789 Pine Road',
-      city: 'Chicago',
-      state: 'IL',
-      zipCode: '60601',
-      country: 'USA',
-      phone: '+1-555-0103',
-    },
-    createdAt: '2024-02-14',
-    updatedAt: '2024-02-14',
-  },
-];
+// Fetch all users (admin only - uses service role)
+export async function getUsers(): Promise<User[]> {
+  const supabase = createServerClient();
 
-export const salesData: SalesData[] = [
-  { date: '2024-02-01', revenue: 2450.50, orders: 8 },
-  { date: '2024-02-02', revenue: 1890.00, orders: 6 },
-  { date: '2024-02-03', revenue: 3200.75, orders: 12 },
-  { date: '2024-02-04', revenue: 2780.25, orders: 9 },
-  { date: '2024-02-05', revenue: 4100.00, orders: 15 },
-  { date: '2024-02-06', revenue: 3560.50, orders: 11 },
-  { date: '2024-02-07', revenue: 2950.00, orders: 10 },
-  { date: '2024-02-08', revenue: 4500.25, orders: 16 },
-  { date: '2024-02-09', revenue: 3890.75, orders: 13 },
-  { date: '2024-02-10', revenue: 5200.00, orders: 18 },
-  { date: '2024-02-11', revenue: 4750.50, orders: 17 },
-  { date: '2024-02-12', revenue: 3980.25, orders: 14 },
-  { date: '2024-02-13', revenue: 4200.00, orders: 15 },
-  { date: '2024-02-14', revenue: 5500.75, orders: 20 },
-];
+  const { data: profiles, error: profilesError } = await supabase
+    .from('profiles')
+    .select('*')
+    .order('created_at', { ascending: false });
 
-export const getDashboardStats = (): DashboardStats => {
+  if (profilesError) {
+    console.error('Error fetching users:', profilesError);
+    return [];
+  }
+
+  // Fetch addresses for each user
+  const { data: addresses, error: addressesError } = await supabase
+    .from('addresses')
+    .select('*')
+    .eq('is_default', true);
+
+  if (addressesError) {
+    console.error('Error fetching addresses:', addressesError);
+  }
+
+  const addressMap = new Map<string, AddressRow>();
+  addresses?.forEach(addr => addressMap.set(addr.user_id, addr));
+
+  return profiles.map(profile => mapUserFromDb(profile, addressMap.get(profile.id)));
+}
+
+// Get user by ID
+export async function getUserById(id: string): Promise<User | undefined> {
+  const supabase = createServerClient();
+
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (profileError) {
+    console.error('Error fetching user by id:', profileError);
+    return undefined;
+  }
+
+  const { data: address } = await supabase
+    .from('addresses')
+    .select('*')
+    .eq('user_id', id)
+    .eq('is_default', true)
+    .single();
+
+  return mapUserFromDb(profile, address ?? undefined);
+}
+
+// Get user by email
+export async function getUserByEmail(email: string): Promise<User | undefined> {
+  const supabase = createServerClient();
+
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('email', email)
+    .single();
+
+  if (error) {
+    console.error('Error fetching user by email:', error);
+    return undefined;
+  }
+
+  const { data: address } = await supabase
+    .from('addresses')
+    .select('*')
+    .eq('user_id', profile.id)
+    .eq('is_default', true)
+    .single();
+
+  return mapUserFromDb(profile, address ?? undefined);
+}
+
+// Fetch all orders (admin only)
+export async function getOrders(): Promise<Order[]> {
+  const supabase = createServerClient();
+
+  const { data, error } = await supabase
+    .from('orders')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching orders:', error);
+    return [];
+  }
+
+  return data.map(mapOrderFromDb);
+}
+
+// Fetch sales data (admin only)
+export async function getSalesData(): Promise<SalesData[]> {
+  const supabase = createServerClient();
+
+  const { data, error } = await supabase
+    .from('sales_data')
+    .select('*')
+    .order('date', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching sales data:', error);
+    return [];
+  }
+
+  return data.map(mapSalesDataFromDb);
+}
+
+// Get dashboard stats
+export async function getDashboardStats(): Promise<DashboardStats> {
+  const supabase = createServerClient();
+
+  // Fetch all data in parallel
+  const [salesDataResult, ordersResult, productsResult, usersResult] = await Promise.all([
+    supabase.from('sales_data').select('*').order('date', { ascending: true }),
+    supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(5),
+    supabase.from('products').select('id', { count: 'exact' }),
+    supabase.from('profiles').select('id', { count: 'exact' }).eq('role', 'user'),
+  ]);
+
+  const salesData = (salesDataResult.data ?? []).map(mapSalesDataFromDb);
+  const recentOrders = (ordersResult.data ?? []).map(mapOrderFromDb);
+  const totalProducts = productsResult.count ?? 0;
+  const totalUsers = usersResult.count ?? 0;
+
   const totalRevenue = salesData.reduce((sum, day) => sum + day.revenue, 0);
   const totalOrders = salesData.reduce((sum, day) => sum + day.orders, 0);
 
   return {
     totalRevenue,
     totalOrders,
-    totalProducts: 20,
-    totalUsers: users.filter(u => u.role === 'user').length,
-    recentOrders: orders.slice(0, 5),
+    totalProducts,
+    totalUsers,
+    recentOrders,
     salesData,
   };
-};
+}
 
-export const getUserById = (id: string): User | undefined => {
-  return users.find(user => user.id === id);
-};
+// Map database row to User type
+function mapUserFromDb(row: ProfileRow, address?: AddressRow): User {
+  return {
+    id: row.id,
+    email: row.email,
+    name: row.name,
+    avatar: row.avatar ?? undefined,
+    role: row.role as 'user' | 'admin',
+    createdAt: row.created_at?.split('T')[0] ?? new Date().toISOString().split('T')[0],
+    address: address ? mapAddressFromDb(address) : undefined,
+  };
+}
 
-export const getUserByEmail = (email: string): User | undefined => {
-  return users.find(user => user.email === email);
-};
+// Map database row to Address type
+function mapAddressFromDb(row: AddressRow): Address {
+  return {
+    street: row.street,
+    city: row.city,
+    state: row.state,
+    zipCode: row.zip_code,
+    country: row.country,
+    phone: row.phone,
+  };
+}
+
+// Map database row to Order type
+function mapOrderFromDb(row: OrderRow): Order {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    items: [], // Order items would need to be fetched separately if needed
+    total: row.total,
+    status: row.status as Order['status'],
+    paymentMethod: row.payment_method as Order['paymentMethod'],
+    paymentStatus: row.payment_status as Order['paymentStatus'],
+    shippingAddress: {
+      street: row.shipping_street,
+      city: row.shipping_city,
+      state: row.shipping_state,
+      zipCode: row.shipping_zip_code,
+      country: row.shipping_country,
+      phone: row.shipping_phone,
+    },
+    createdAt: row.created_at?.split('T')[0] ?? new Date().toISOString().split('T')[0],
+    updatedAt: row.updated_at?.split('T')[0] ?? new Date().toISOString().split('T')[0],
+  };
+}
+
+// Map database row to SalesData type
+function mapSalesDataFromDb(row: SalesDataRow): SalesData {
+  return {
+    date: row.date,
+    revenue: Number(row.revenue),
+    orders: row.orders,
+  };
+}

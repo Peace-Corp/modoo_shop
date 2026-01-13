@@ -3,11 +3,17 @@ import Image from 'next/image';
 import { ProductCard } from '@/components/products/ProductCard';
 import { BrandCard } from '@/components/brands/BrandCard';
 import { getFeaturedProducts } from '@/data/products';
-import { getFeaturedBrands } from '@/data/brands';
+import { getFeaturedBrands, getBrands } from '@/data/brands';
 
-export default function HomePage() {
-  const featuredProducts = getFeaturedProducts();
-  const featuredBrands = getFeaturedBrands();
+export default async function HomePage() {
+  const [featuredProducts, featuredBrands, allBrands] = await Promise.all([
+    getFeaturedProducts(),
+    getFeaturedBrands(),
+    getBrands(),
+  ]);
+
+  // Create brand lookup map
+  const brandMap = new Map(allBrands.map(b => [b.id, b]));
 
   return (
     <div>
@@ -69,7 +75,7 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} brand={brandMap.get(product.brandId)} />
             ))}
           </div>
         </div>

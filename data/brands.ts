@@ -1,41 +1,86 @@
 import { Brand } from '@/types';
+import { supabase } from '@/lib/supabase';
 
-export const brands: Brand[] = [
-  {
-    id: 'brand-1',
-    name: '유메키샵',
-    slug: 'yumeki',
-    logo: 'https://xwuvbztgpwhbwohontuh.supabase.co/storage/v1/object/public/umeki_products/yumeki_logo.png',
-    banner: 'https://xwuvbztgpwhbwohontuh.supabase.co/storage/v1/object/public/umeki_products/yumki_cover_banner.png',
-    description: '댄서 유메키의 공식 굿즈샵입니다. 유메키와 함께하는 특별한 아이템을 만나보세요.',
-    featured: true,
-  },
-  // {
-  //   id: 'brand-2',
-  //   name: '사람의탈',
-  //   slug: 'mask',
-  //   logo: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=200&h=200&fit=crop',
-  //   banner: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=1600&h=400&fit=crop',
-  //   description: '한국 전통의 멋과 현대적 감각이 어우러진 의류 브랜드. 독특한 디자인으로 개성을 표현하세요.',
-  // },
-  // {
-  //   id: 'brand-3',
-  //   name: '눙눙이의 겨울',
-  //   slug: 'nungnungi-winter',
-  //   logo: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=200&h=200&fit=crop',
-  //   banner: 'https://images.unsplash.com/photo-1483664852095-d6cc6870702d?w=1600&h=400&fit=crop',
-  //   description: '따뜻하고 포근한 겨울 아이템 전문 브랜드. 귀여운 디자인과 최고의 보온성을 자랑합니다.',
-  // },
-];
+// Fetch all brands from Supabase
+export async function getBrands(): Promise<Brand[]> {
+  const { data, error } = await supabase
+    .from('brands')
+    .select('*')
+    .order('created_at', { ascending: false });
 
-export const getBrandById = (id: string): Brand | undefined => {
-  return brands.find(brand => brand.id === id);
-};
+  if (error) {
+    console.error('Error fetching brands:', error);
+    return [];
+  }
 
-export const getBrandBySlug = (slug: string): Brand | undefined => {
-  return brands.find(brand => brand.slug === slug);
-};
+  return data.map(mapBrandFromDb);
+}
 
-export const getFeaturedBrands = (): Brand[] => {
-  return brands.filter(brand => brand.featured);
-};
+// Get brand by ID
+export async function getBrandById(id: string): Promise<Brand | undefined> {
+  const { data, error } = await supabase
+    .from('brands')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    console.error('Error fetching brand by id:', error);
+    return undefined;
+  }
+
+  return mapBrandFromDb(data);
+}
+
+// Get brand by slug
+export async function getBrandBySlug(slug: string): Promise<Brand | undefined> {
+  const { data, error } = await supabase
+    .from('brands')
+    .select('*')
+    .eq('slug', slug)
+    .single();
+
+  if (error) {
+    console.error('Error fetching brand by slug:', error);
+    return undefined;
+  }
+
+  return mapBrandFromDb(data);
+}
+
+// Get featured brands
+export async function getFeaturedBrands(): Promise<Brand[]> {
+  const { data, error } = await supabase
+    .from('brands')
+    .select('*')
+    .eq('featured', true)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching featured brands:', error);
+    return [];
+  }
+
+  return data.map(mapBrandFromDb);
+}
+
+// Map database row to Brand type
+function mapBrandFromDb(row: {
+  id: string;
+  name: string;
+  slug: string;
+  logo: string;
+  banner: string;
+  description: string;
+  featured: boolean | null;
+}): Brand {
+  return {
+    id: row.id,
+    name: row.name,
+    slug: row.slug,
+    logo: row.logo,
+    banner: row.banner,
+    description: row.description,
+    featured: row.featured ?? false,
+  };
+}

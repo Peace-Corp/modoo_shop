@@ -1,7 +1,8 @@
 import { BrandCard } from '@/components/brands/BrandCard';
-import { brands } from '@/data/brands';
+import { getBrands } from '@/data/brands';
 
-export default function BrandsPage() {
+export default async function BrandsPage() {
+  const brands = await getBrands();
   return (
     <div className="py-8">
       {/* Header */}
