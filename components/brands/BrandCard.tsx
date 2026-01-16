@@ -20,6 +20,7 @@ export function BrandCard({ brand, variant = 'small' }: BrandCardProps) {
           <Image
             src={brand.logo}
             alt={brand.name}
+            unoptimized
             width={80}
             height={80}
             className="object-cover w-full h-full"
@@ -43,6 +44,7 @@ export function BrandCard({ brand, variant = 'small' }: BrandCardProps) {
           src={brand.logo}
           alt={brand.name}
           width={112}
+          unoptimized
           height={112}
           className="object-cover w-full h-full"
         />

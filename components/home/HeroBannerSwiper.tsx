@@ -38,6 +38,7 @@ export function HeroBannerSwiper({ banners }: HeroBannerSwiperProps) {
               src={banner.imageLink}
               alt={banner.title}
               fill
+              unoptimized
               className="object-cover"
               priority
             />
