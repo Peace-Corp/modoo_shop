@@ -690,6 +690,7 @@ export default function CheckoutPage() {
                           src={item.product.images[0]}
                           alt={item.product.name}
                           width={64}
+                          unoptimized
                           height={64}
                           className="w-full h-full object-cover"
                         />
