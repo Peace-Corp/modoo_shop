@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/Button';
@@ -70,11 +71,11 @@ interface JusoResult {
 }
 
 export default function CheckoutPage() {
-  const { items, getTotal, clearCart } = useCart();
+  const router = useRouter();
+  const { items, getTotal } = useCart();
   const { user } = useAuth();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('toss');
-  const [step, setStep] = useState<'info' | 'payment' | 'success'>('info');
-  const [orderNumber, setOrderNumber] = useState('');
+  const [step, setStep] = useState<'info' | 'payment'>('info');
   const [shippingType, setShippingType] = useState<ShippingType>('domestic');
 
   // Generate unique order ID: ORD-YYYYMMDD-XXXXXX
@@ -252,10 +253,10 @@ export default function CheckoutPage() {
       alert('주문 생성에 실패했습니다. 다시 시도해주세요.');
       return false;
     }
-  }, [orderId, orderName, total, paymentMethod, shippingType, shippingInfo, internationalShippingInfo, items, clearCart]);
+  }, [orderId, orderName, total, paymentMethod, shippingType, shippingInfo, internationalShippingInfo, items]);
 
   // Early return for empty cart
-  if (items.length === 0 && step !== 'success') {
+  if (items.length === 0) {
     return (
       <div className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -294,41 +295,6 @@ export default function CheckoutPage() {
 
     setStep('payment');
   };
-
-  if (step === 'success') {
-    return (
-      <div className="py-16">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">주문이 완료되었습니다!</h1>
-            <p className="text-gray-600 mb-6">
-              주문해 주셔서 감사합니다. 결제가 정상적으로 처리되었습니다.
-            </p>
-            <div className="bg-gray-50 rounded-xl p-4 mb-8">
-              <p className="text-sm text-gray-500">주문번호</p>
-              <p className="text-xl font-bold text-gray-900">{orderNumber}</p>
-            </div>
-            <p className="text-sm text-gray-500 mb-8">
-              주문 확인 이메일이 {shippingType === 'domestic' ? shippingInfo.email : internationalShippingInfo.email}로 발송되었습니다
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/search">
-                <Button variant="outline">쇼핑 계속하기</Button>
-              </Link>
-              <Link href="/">
-                <Button>홈으로</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="py-8">
@@ -683,9 +649,8 @@ export default function CheckoutPage() {
                         onBeforeCreateOrder={createOrder}
                         onSuccess={(details) => {
                           console.log('PayPal payment success:', details);
-                          setOrderNumber(orderId);
-                          clearCart();
-                          setStep('success');
+                          // Redirect to unified success page
+                          router.push(`/checkout/success?paymentMethod=paypal&orderId=${orderId}`);
                         }}
                         onError={(error) => {
                           console.error('PayPal payment error:', error);

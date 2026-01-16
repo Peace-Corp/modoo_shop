@@ -36,6 +36,9 @@ export function Header() {
             <Link href="/contact" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
               고객센터
             </Link>
+            <Link href="/orders" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
+              주문조회
+            </Link>
           </nav>
 
           {/* Right Side Icons */}
@@ -77,7 +80,7 @@ export function Header() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-100 py-4">
+          <div className="md:hidden border-t border-gray-100 py-4 shadow-lg">
             <nav className="flex flex-col space-y-3">
               <Link href="/" className="text-gray-600 hover:text-indigo-600 px-2 py-1" onClick={() => setIsMenuOpen(false)}>
                 홈
@@ -91,11 +94,14 @@ export function Header() {
               <Link href="/contact" className="text-gray-600 hover:text-indigo-600 px-2 py-1" onClick={() => setIsMenuOpen(false)}>
                 고객센터
               </Link>
-              {!user && (
+              <Link href="/orders" className="text-gray-600 hover:text-indigo-600 px-2 py-1" onClick={() => setIsMenuOpen(false)}>
+                주문조회
+              </Link>
+              {/* {!user && (
                 <Link href="/signin" className="text-indigo-600 font-medium px-2 py-1" onClick={() => setIsMenuOpen(false)}>
                   로그인
                 </Link>
-              )}
+              )} */}
             </nav>
           </div>
         )}

@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
+import { useCart } from '@/contexts/CartContext';
 
 interface PaymentResult {
   success: boolean;
@@ -23,13 +24,57 @@ interface PaymentResult {
 
 function PaymentSuccessContent() {
   const searchParams = useSearchParams();
+  const { clearCart } = useCart();
   const [isLoading, setIsLoading] = useState(true);
   const [result, setResult] = useState<PaymentResult | null>(null);
 
   useEffect(() => {
     const confirmPayment = async () => {
-      const paymentKey = searchParams.get('paymentKey');
+      const paymentMethod = searchParams.get('paymentMethod');
       const orderId = searchParams.get('orderId');
+
+      // Handle PayPal payments
+      if (paymentMethod === 'paypal' && orderId) {
+        try {
+          // Fetch order details from database
+          const response = await fetch(`/api/orders/${orderId}`);
+          const data = await response.json();
+
+          if (!response.ok) {
+            setResult({
+              success: false,
+              error: data.error || '주문 정보를 불러올 수 없습니다.',
+            });
+          } else {
+            // Clear cart after successful PayPal payment
+            clearCart();
+            setResult({
+              success: true,
+              payment: {
+                paymentKey: data.payment_key || '',
+                orderId: data.id,
+                orderName: data.order_name,
+                amount: data.total,
+                status: data.payment_status,
+                method: 'PayPal',
+                approvedAt: data.updated_at || data.created_at,
+              },
+            });
+          }
+        } catch (error) {
+          console.error('Order fetch error:', error);
+          setResult({
+            success: false,
+            error: '주문 정보를 불러오는 중 오류가 발생했습니다.',
+          });
+        } finally {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      // Handle Toss payments
+      const paymentKey = searchParams.get('paymentKey');
       const amount = searchParams.get('amount');
 
       if (!paymentKey || !orderId || !amount) {
@@ -63,6 +108,8 @@ function PaymentSuccessContent() {
             code: data.code,
           });
         } else {
+          // Clear cart after successful Toss payment
+          clearCart();
           setResult(data);
         }
       } catch (error) {
@@ -77,7 +124,7 @@ function PaymentSuccessContent() {
     };
 
     confirmPayment();
-  }, [searchParams]);
+  }, [searchParams, clearCart]);
 
   if (isLoading) {
     return (
