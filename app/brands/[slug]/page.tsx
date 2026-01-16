@@ -34,6 +34,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
           src={brand.banner}
           alt={brand.name}
           fill
+          unoptimized
           className="object-cover"
           priority
         />
@@ -45,6 +46,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
                 src={brand.logo}
                 alt={brand.name}
                 width={96}
+                unoptimized
                 height={96}
                 className="object-cover w-full h-full"
               />
