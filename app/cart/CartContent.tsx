@@ -71,6 +71,7 @@ export default function CartContent({ brands }: CartContentProps) {
                           alt={item.product.name}
                           width={128}
                           height={128}
+                          unoptimized
                           className="w-full h-full object-cover"
                         />
                       </div>

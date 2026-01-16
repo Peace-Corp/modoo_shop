@@ -64,6 +64,7 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
                 alt={product.name}
                 width={600}
                 height={600}
+                unoptimized
                 className="w-full h-full object-cover"
                 priority
               />
@@ -83,6 +84,7 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
                       alt={`${product.name} ${index + 1}`}
                       width={80}
                       height={80}
+                      unoptimized
                       className="w-full h-full object-cover"
                     />
                   </button>
@@ -286,6 +288,7 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
                 src={product.sizeChartImage}
                 alt={`${product.name} 사이즈 가이드`}
                 width={1200}
+                unoptimized
                 height={800}
                 className="w-full h-auto object-contain"
               />
@@ -302,6 +305,7 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
                 src={product.descriptionImage}
                 alt={`${product.name} 상세 정보`}
                 width={1200}
+                unoptimized
                 height={1600}
                 className="w-full h-auto object-contain"
               />
