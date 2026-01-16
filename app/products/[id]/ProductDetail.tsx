@@ -104,7 +104,7 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
             <h1 className="text-lg sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-4">{product.name}</h1>
 
             {/* Rating */}
-            <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-4">
+            {/* <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-4">
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => (
                   <svg
@@ -120,7 +120,7 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
               <span className="text-xs sm:text-base text-gray-600">{product.rating}</span>
               <span className="text-gray-400">|</span>
               <span className="text-xs sm:text-base text-gray-600">{product.reviewCount}개 리뷰</span>
-            </div>
+            </div> */}
 
             {/* Price */}
             <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-6">
@@ -276,6 +276,38 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
             </div> */}
           </div>
         </div>
+
+        {/* Size Chart Image */}
+        {product.sizeChartImage && (
+          <div className="mt-8 sm:mt-16">
+            <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-6">사이즈 가이드</h2>
+            <div className="rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100">
+              <Image
+                src={product.sizeChartImage}
+                alt={`${product.name} 사이즈 가이드`}
+                width={1200}
+                height={800}
+                className="w-full h-auto object-contain"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Description Image */}
+        {product.descriptionImage && (
+          <div className="mt-8 sm:mt-16">
+            <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-6">상품 상세</h2>
+            <div className="rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100">
+              <Image
+                src={product.descriptionImage}
+                alt={`${product.name} 상세 정보`}
+                width={1200}
+                height={1600}
+                className="w-full h-auto object-contain"
+              />
+            </div>
+          </div>
+        )}
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (

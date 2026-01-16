@@ -307,6 +307,7 @@ export type Database = {
           category: string
           created_at: string | null
           description: string
+          description_image: string | null
           featured: boolean | null
           id: string
           images: string[]
@@ -315,6 +316,7 @@ export type Database = {
           price: number
           rating: number | null
           review_count: number | null
+          size_chart_image: string | null
           stock: number
           tags: string[] | null
           updated_at: string | null
@@ -324,6 +326,7 @@ export type Database = {
           category: string
           created_at?: string | null
           description: string
+          description_image?: string | null
           featured?: boolean | null
           id?: string
           images?: string[]
@@ -332,6 +335,7 @@ export type Database = {
           price: number
           rating?: number | null
           review_count?: number | null
+          size_chart_image?: string | null
           stock?: number
           tags?: string[] | null
           updated_at?: string | null
@@ -341,6 +345,7 @@ export type Database = {
           category?: string
           created_at?: string | null
           description?: string
+          description_image?: string | null
           featured?: boolean | null
           id?: string
           images?: string[]
@@ -349,6 +354,7 @@ export type Database = {
           price?: number
           rating?: number | null
           review_count?: number | null
+          size_chart_image?: string | null
           stock?: number
           tags?: string[] | null
           updated_at?: string | null

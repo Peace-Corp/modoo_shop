@@ -153,6 +153,8 @@ function mapProductFromDb(row: ProductRow): Product {
     tags: row.tags ?? [],
     createdAt: row.created_at?.split('T')[0] ?? new Date().toISOString().split('T')[0],
     featured: row.featured ?? false,
+    sizeChartImage: row.size_chart_image ?? undefined,
+    descriptionImage: row.description_image ?? undefined,
   };
 }
 

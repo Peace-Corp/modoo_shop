@@ -23,6 +23,8 @@ export interface Product {
   createdAt: string;
   featured?: boolean;
   variants?: ProductVariant[];
+  sizeChartImage?: string;
+  descriptionImage?: string;
 }
 
 // Brand Types

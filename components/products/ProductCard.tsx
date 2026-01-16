@@ -27,7 +27,8 @@ export function ProductCard({ product, brand }: ProductCardProps) {
   return (
     <>
       <Link
-        href={`/products/${product.id}`}
+        href={product.brandId === 'brand-1' ? 'https://www.youmakeit.shop/home' : `/products/${product.id}`}
+        // href={`/products/${product.id}`}
         rel="noopener noreferrer"
         className="group block bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
       >

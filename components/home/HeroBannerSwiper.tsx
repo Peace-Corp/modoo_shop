@@ -43,7 +43,7 @@ export function HeroBannerSwiper({ banners }: HeroBannerSwiperProps) {
             />
             <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
             <div className="absolute inset-0 flex items-end sm:items-center pb-8 sm:pb-0">
-              <div className="max-w-7xl px-3 sm:px-4 md:px-6 z-10">
+              <div className="max-w-7xl px-3 sm:px-4 md:px-20 z-10">
                 <div className="max-w-xs sm:max-w-sm md:max-w-lg lg:max-w-xl">
                   {banner.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 sm:gap-1.5 md:gap-2 mb-1.5 sm:mb-3 md:mb-6">
@@ -69,7 +69,7 @@ export function HeroBannerSwiper({ banners }: HeroBannerSwiperProps) {
                     <div className="flex flex-wrap gap-2 md:gap-4">
                       <Link
                         href={banner.link}
-                        className="inline-flex items-center px-2.5 py-1.5 sm:px-4 sm:py-2 md:px-8 md:py-4 bg-[#0052cc] text-white text-[10px] sm:text-xs md:text-base font-semibold rounded-lg md:rounded-xl hover:bg-indigo-700 transition-colors"
+                        className="inline-flex items-center px-2.5 py-1.5 sm:px-4 sm:py-2 md:px-8 md:py-4 bg-black text-white text-[10px] sm:text-xs md:text-base font-semibold rounded-lg md:rounded-xl hover:bg-indigo-700 transition-colors"
                       >
                         구매하러 가기
                         <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-5 md:h-5 ml-1 md:ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
