@@ -1,3 +1,12 @@
+// Product Variant Types
+export interface ProductVariant {
+  id: string;
+  productId: string;
+  size: string;
+  stock: number;
+  sortOrder: number;
+}
+
 // Product Types
 export interface Product {
   id: string;
@@ -8,18 +17,21 @@ export interface Product {
   images: string[];
   brandId: string;
   category: string;
-  stock: number;
   rating: number;
   reviewCount: number;
   tags: string[];
   createdAt: string;
   featured?: boolean;
+  variants?: ProductVariant[];
+  sizeChartImage?: string;
+  descriptionImage?: string;
 }
 
 // Brand Types
 export interface Brand {
   id: string;
   name: string;
+  eng_name?: string;
   slug: string;
   logo: string;
   banner: string;
@@ -51,6 +63,7 @@ export interface Address {
 export interface CartItem {
   product: Product;
   quantity: number;
+  variant?: ProductVariant;
 }
 
 export interface Cart {
@@ -61,7 +74,7 @@ export interface Cart {
 // Order Types
 export interface Order {
   id: string;
-  userId: string;
+  userId: string | null;
   items: CartItem[];
   total: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
@@ -70,6 +83,17 @@ export interface Order {
   shippingAddress: Address;
   createdAt: string;
   updatedAt: string;
+}
+
+// Hero Banner Types
+export interface HeroBanner {
+  id: string;
+  title: string;
+  subtitle?: string;
+  link?: string;
+  tags: string[];
+  displayOrder: number;
+  imageLink: string;
 }
 
 // Admin Dashboard Types

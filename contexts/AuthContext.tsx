@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '@/types';
-import { users, getUserByEmail } from '@/data/users';
+import { getUserByEmail } from '@/data/users';
 
 interface AuthContextType {
   user: User | null;
@@ -28,43 +28,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    const foundUser = getUserByEmail(email);
-    if (foundUser) {
-      // In a real app, you'd validate the password here
-      setUser(foundUser);
-      localStorage.setItem('modoo_user', JSON.stringify(foundUser));
-      return { success: true };
+    try {
+      const foundUser = await getUserByEmail(email);
+      if (foundUser) {
+        // In a real app, you'd validate the password here
+        setUser(foundUser);
+        localStorage.setItem('modoo_user', JSON.stringify(foundUser));
+        return { success: true };
+      }
+      return { success: false, error: 'Invalid email or password' };
+    } catch {
+      return { success: false, error: 'An error occurred during sign in' };
     }
-    return { success: false, error: 'Invalid email or password' };
   };
 
   const signUp = async (name: string, email: string, password: string): Promise<{ success: boolean; error?: string }> => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+      const existingUser = await getUserByEmail(email);
+      if (existingUser) {
+        return { success: false, error: 'Email already exists' };
+      }
 
-    const existingUser = getUserByEmail(email);
-    if (existingUser) {
-      return { success: false, error: 'Email already exists' };
+      // Create new user locally (in production, this would use Supabase Auth)
+      const newUser: User = {
+        id: `user-${Date.now()}`,
+        email,
+        name,
+        role: 'user',
+        createdAt: new Date().toISOString().split('T')[0],
+      };
+
+      setUser(newUser);
+      localStorage.setItem('modoo_user', JSON.stringify(newUser));
+      return { success: true };
+    } catch {
+      return { success: false, error: 'An error occurred during sign up' };
     }
-
-    // Create new user (in a real app, this would go to a database)
-    const newUser: User = {
-      id: `user-${Date.now()}`,
-      email,
-      name,
-      role: 'user',
-      createdAt: new Date().toISOString().split('T')[0],
-    };
-
-    // Add to local users array (in memory only - would be persisted in real app)
-    users.push(newUser);
-
-    setUser(newUser);
-    localStorage.setItem('modoo_user', JSON.stringify(newUser));
-    return { success: true };
   };
 
   const signOut = () => {

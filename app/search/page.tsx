@@ -1,5 +1,7 @@
 import { Suspense } from 'react';
 import SearchContent from './SearchContent';
+import { getProducts, getAllCategories } from '@/data/products';
+import { getBrands } from '@/data/brands';
 
 function SearchFallback() {
   return (
@@ -24,10 +26,20 @@ function SearchFallback() {
   );
 }
 
-export default function SearchPage() {
+export default async function SearchPage() {
+  const [products, brands, categories] = await Promise.all([
+    getProducts(),
+    getBrands(),
+    getAllCategories(),
+  ]);
+
   return (
     <Suspense fallback={<SearchFallback />}>
-      <SearchContent />
+      <SearchContent
+        initialProducts={products}
+        brands={brands}
+        categories={categories}
+      />
     </Suspense>
   );
 }

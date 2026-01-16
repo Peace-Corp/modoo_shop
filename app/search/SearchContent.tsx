@@ -3,10 +3,15 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { ProductCard } from '@/components/products/ProductCard';
-import { products, getAllCategories } from '@/data/products';
-import { brands } from '@/data/brands';
+import { Product, Brand } from '@/types';
 
-export default function SearchContent() {
+interface SearchContentProps {
+  initialProducts: Product[];
+  brands: Brand[];
+  categories: string[];
+}
+
+export default function SearchContent({ initialProducts, brands, categories }: SearchContentProps) {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
   const initialCategory = searchParams.get('category') || '';
@@ -18,10 +23,11 @@ export default function SearchContent() {
   const [priceRange, setPriceRange] = useState({ min: 0, max: 500000 });
   const [showFilters, setShowFilters] = useState(false);
 
-  const categories = getAllCategories();
+  // Create brand lookup map
+  const brandMap = useMemo(() => new Map(brands.map(b => [b.id, b])), [brands]);
 
   const filteredProducts = useMemo(() => {
-    let result = [...products];
+    let result = [...initialProducts];
 
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
@@ -65,7 +71,7 @@ export default function SearchContent() {
     }
 
     return result;
-  }, [searchQuery, selectedCategory, selectedBrand, sortBy, priceRange]);
+  }, [initialProducts, searchQuery, selectedCategory, selectedBrand, sortBy, priceRange]);
 
   const clearFilters = () => {
     setSearchQuery('');
@@ -240,7 +246,7 @@ export default function SearchContent() {
             {filteredProducts.length > 0 ? (
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                 {filteredProducts.map(product => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard key={product.id} product={product} brand={brandMap.get(product.brandId)} />
                 ))}
               </div>
             ) : (

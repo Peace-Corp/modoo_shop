@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ProductCard } from '@/components/products/ProductCard';
-import { getBrandBySlug, brands } from '@/data/brands';
+import { getBrandBySlug, getBrands } from '@/data/brands';
 import { getProductsByBrandId } from '@/data/products';
 
 interface BrandPageProps {
@@ -10,6 +10,7 @@ interface BrandPageProps {
 }
 
 export async function generateStaticParams() {
+  const brands = await getBrands();
   return brands.map((brand) => ({
     slug: brand.slug,
   }));
@@ -17,18 +18,18 @@ export async function generateStaticParams() {
 
 export default async function BrandPage({ params }: BrandPageProps) {
   const { slug } = await params;
-  const brand = getBrandBySlug(slug);
+  const brand = await getBrandBySlug(slug);
 
   if (!brand) {
     notFound();
   }
 
-  const products = getProductsByBrandId(brand.id);
+  const products = await getProductsByBrandId(brand.id);
 
   return (
     <div className="pb-8">
       {/* Brand Header */}
-      <div className="relative h-64 md:h-80">
+      <div className="relative aspect-21/9">
         <Image
           src={brand.banner}
           alt={brand.name}
@@ -79,7 +80,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
         {products.length > 0 ? (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {products.map(product => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} brand={brand} />
             ))}
           </div>
         ) : (
