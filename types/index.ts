@@ -29,6 +29,7 @@ export interface Product {
 export interface Brand {
   id: string;
   name: string;
+  eng_name?: string;
   slug: string;
   logo: string;
   banner: string;
@@ -71,7 +72,7 @@ export interface Cart {
 // Order Types
 export interface Order {
   id: string;
-  userId: string;
+  userId: string | null;
   items: CartItem[];
   total: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';

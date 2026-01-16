@@ -18,27 +18,27 @@ export default async function BrandsPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Featured Brands */}
-        <div className="mb-12">
+        {/* <div className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">추천 브랜드</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {brands.filter(b => b.featured).map(brand => (
               <BrandCard key={brand.id} brand={brand} />
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* All Brands */}
         <div>
           <h2 className="text-2xl font-bold text-gray-900 mb-6">전체 브랜드</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex flex-col gap-6">
             {brands.map(brand => (
-              <BrandCard key={brand.id} brand={brand} />
+              <BrandCard key={brand.id} brand={brand} variant='large' />
             ))}
           </div>
         </div>
 
         {/* Brand Benefits */}
-        <div className="mt-16 bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+        {/* <div className="mt-16 bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
           <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">모두의 샵 브랜드의 특별함</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
@@ -69,7 +69,7 @@ export default async function BrandsPage() {
               <p className="text-gray-600 text-sm">엄격한 품질 기준을 통과한 브랜드만 선별하여 소개합니다.</p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -64,6 +64,7 @@ export type Database = {
           banner: string
           created_at: string | null
           description: string
+          eng_name: string | null
           featured: boolean | null
           id: string
           logo: string
@@ -75,6 +76,7 @@ export type Database = {
           banner: string
           created_at?: string | null
           description: string
+          eng_name?: string | null
           featured?: boolean | null
           id: string
           logo: string
@@ -86,6 +88,7 @@ export type Database = {
           banner?: string
           created_at?: string | null
           description?: string
+          eng_name?: string | null
           featured?: boolean | null
           id?: string
           logo?: string
@@ -103,6 +106,8 @@ export type Database = {
           price_at_time: number
           product_id: string
           quantity: number
+          size: string | null
+          variant_id: string | null
         }
         Insert: {
           created_at?: string | null
@@ -111,6 +116,8 @@ export type Database = {
           price_at_time: number
           product_id: string
           quantity: number
+          size?: string | null
+          variant_id?: string | null
         }
         Update: {
           created_at?: string | null
@@ -119,6 +126,8 @@ export type Database = {
           price_at_time?: number
           product_id?: string
           quantity?: number
+          size?: string | null
+          variant_id?: string | null
         }
         Relationships: [
           {
@@ -135,12 +144,23 @@ export type Database = {
             referencedRelation: "products"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "order_items_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
         ]
       }
       orders: {
         Row: {
           created_at: string | null
+          customer_email: string | null
+          customer_name: string | null
           id: string
+          order_name: string | null
+          payment_key: string | null
           payment_method: string
           payment_status: string
           shipping_city: string
@@ -152,11 +172,15 @@ export type Database = {
           status: string
           total: number
           updated_at: string | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
           id?: string
+          order_name?: string | null
+          payment_key?: string | null
           payment_method: string
           payment_status?: string
           shipping_city: string
@@ -168,11 +192,15 @@ export type Database = {
           status?: string
           total: number
           updated_at?: string | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string | null
+          customer_email?: string | null
+          customer_name?: string | null
           id?: string
+          order_name?: string | null
+          payment_key?: string | null
           payment_method?: string
           payment_status?: string
           shipping_city?: string
@@ -184,7 +212,7 @@ export type Database = {
           status?: string
           total?: number
           updated_at?: string | null
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -192,6 +220,44 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_variants: {
+        Row: {
+          created_at: string | null
+          id: string
+          product_id: string
+          size: string
+          sort_order: number | null
+          stock: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          product_id: string
+          size: string
+          sort_order?: number | null
+          stock?: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          product_id?: string
+          size?: string
+          sort_order?: number | null
+          stock?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
             referencedColumns: ["id"]
           },
         ]
@@ -210,6 +276,7 @@ export type Database = {
           price: number
           rating: number | null
           review_count: number | null
+          stock: number
           tags: string[] | null
           updated_at: string | null
         }
@@ -226,6 +293,7 @@ export type Database = {
           price: number
           rating?: number | null
           review_count?: number | null
+          stock?: number
           tags?: string[] | null
           updated_at?: string | null
         }
@@ -242,6 +310,7 @@ export type Database = {
           price?: number
           rating?: number | null
           review_count?: number | null
+          stock?: number
           tags?: string[] | null
           updated_at?: string | null
         }

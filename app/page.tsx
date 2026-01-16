@@ -16,9 +16,9 @@ export default async function HomePage() {
   const brandMap = new Map(allBrands.map(b => [b.id, b]));
 
   return (
-    <div>
+    <div className='max-w-300 mx-auto'>
       {/* Hero Section */}
-      <section className="relative aspect-4/3 sm:aspect-video md:aspect-21/9 flex items-center overflow-hidden">
+      <section className="relative aspect-21/9 flex items-center overflow-hidden rounded-2xl md:mt-10 mx-2">
         <div className="absolute inset-0">
           <Image
             src="https://xwuvbztgpwhbwohontuh.supabase.co/storage/v1/object/public/umeki_products/hero_banner_image.png"
@@ -29,7 +29,7 @@ export default async function HomePage() {
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
         </div>
-        <div className="relative max-w-7xl px-10 sm:px-10 lg:px-10 z-10">
+        <div className="relative max-w-7xl px-6 z-10">
           <div className="max-w-xl">
             <span className="inline-block px-3 py-1 md:px-4 md:py-1.5 bg-[#0052cc] text-white text-xs md:text-sm font-medium rounded-full mb-4 md:mb-6">
               신상품
@@ -56,7 +56,7 @@ export default async function HomePage() {
       </section>
 
       {/* Featured Products - 추천 상품을 브랜드보다 위로 이동 */}
-      <section className="py-10 bg-white">
+      <section className="py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-10">
             <div>
@@ -73,7 +73,7 @@ export default async function HomePage() {
               </svg>
             </Link>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} brand={brandMap.get(product.brandId)} />
             ))}
@@ -82,7 +82,7 @@ export default async function HomePage() {
       </section>
 
       {/* Featured Brands */}
-      <section className="py-10 bg-gray-50">
+      <section className="py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-10">
             <div>
