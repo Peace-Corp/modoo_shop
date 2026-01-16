@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
+import { sendOrderConfirmationEmail } from '@/lib/mailjet';
 
 const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
 const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET;
@@ -108,6 +109,70 @@ export async function POST(request: NextRequest) {
         paypalTransactionId,
         captureStatus: captureData.status,
       });
+    }
+
+    // Send order confirmation email
+    try {
+      const { data: orderData } = await supabase
+        .from('orders')
+        .select(`
+          *,
+          order_items (
+            quantity,
+            price_at_time,
+            size,
+            products (
+              name
+            )
+          )
+        `)
+        .eq('id', orderId)
+        .single();
+
+      if (orderData) {
+        const shippingAddress = [
+          orderData.shipping_street,
+          orderData.shipping_city,
+          orderData.shipping_state,
+          orderData.shipping_zip_code,
+          orderData.shipping_country,
+        ]
+          .filter(Boolean)
+          .join(', ');
+
+        const emailItems = orderData.order_items?.map((item: { products: { name: string } | null; size: string | null; quantity: number; price_at_time: number }) => ({
+          name: item.products?.name || 'Unknown Product',
+          size: item.size || undefined,
+          quantity: item.quantity,
+          price: item.price_at_time * item.quantity,
+        })) || [];
+
+        const subtotal = emailItems.reduce((sum: number, item: { price: number }) => sum + item.price, 0);
+        const shipping = orderData.total - subtotal;
+
+        await sendOrderConfirmationEmail({
+          orderId: orderData.id,
+          orderName: orderData.order_name || '',
+          customerName: orderData.customer_name || '고객',
+          customerEmail: orderData.customer_email || captureData.payer?.email_address || '',
+          items: emailItems,
+          subtotal,
+          shipping: shipping > 0 ? shipping : 0,
+          total: orderData.total,
+          paymentMethod: 'PayPal',
+          shippingAddress,
+          orderDate: new Date().toLocaleString('ko-KR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+        });
+      }
+    } catch (emailError) {
+      console.error('Failed to send order confirmation email:', emailError);
+      // Don't fail the payment capture if email fails
     }
 
     return NextResponse.json({

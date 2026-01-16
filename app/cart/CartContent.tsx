@@ -36,7 +36,7 @@ export default function CartContent({ brands }: CartContentProps) {
   }
 
   const subtotal = getTotal();
-  const shipping = subtotal > 50000 ? 0 : 3000;
+  const shipping = 3000;
   const total = subtotal + shipping;
 
   return (

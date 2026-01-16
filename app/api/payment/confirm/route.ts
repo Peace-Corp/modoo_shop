@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
+import { sendOrderConfirmationEmail } from '@/lib/mailjet';
 
 const TOSS_SECRET_KEY = process.env.TOSS_SECRET_KEY;
 const TOSS_API_URL = 'https://api.tosspayments.com/v1/payments/confirm';
@@ -14,6 +15,31 @@ export async function POST(request: NextRequest) {
         { error: 'Missing required parameters: paymentKey, orderId, amount' },
         { status: 400 }
       );
+    }
+
+    const supabase = createServerClient();
+
+    // Check if order is already completed to prevent duplicate confirmation
+    const { data: existingOrder } = await supabase
+      .from('orders')
+      .select('id, payment_status, payment_key, order_name, total, updated_at')
+      .eq('id', orderId)
+      .single();
+
+    if (existingOrder?.payment_status === 'completed') {
+      // Order already processed, return success with existing data
+      return NextResponse.json({
+        success: true,
+        payment: {
+          paymentKey: existingOrder.payment_key,
+          orderId: existingOrder.id,
+          orderName: existingOrder.order_name,
+          amount: existingOrder.total,
+          status: 'DONE',
+          method: '카드',
+          approvedAt: existingOrder.updated_at,
+        },
+      });
     }
 
     // Encode secret key for Basic Auth
@@ -47,8 +73,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Payment confirmed successfully - update the order in database
-    const supabase = createServerClient();
-
     const { error: updateError } = await supabase
       .from('orders')
       .update({
@@ -87,6 +111,70 @@ export async function POST(request: NextRequest) {
           }
         }
       }
+    }
+
+    // Send order confirmation email
+    try {
+      const { data: orderData } = await supabase
+        .from('orders')
+        .select(`
+          *,
+          order_items (
+            quantity,
+            price_at_time,
+            size,
+            products (
+              name
+            )
+          )
+        `)
+        .eq('id', orderId)
+        .single();
+
+      if (orderData) {
+        const shippingAddress = [
+          orderData.shipping_street,
+          orderData.shipping_city,
+          orderData.shipping_state,
+          orderData.shipping_zip_code,
+          orderData.shipping_country,
+        ]
+          .filter(Boolean)
+          .join(', ');
+
+        const emailItems = orderData.order_items?.map((item: { products: { name: string } | null; size: string | null; quantity: number; price_at_time: number }) => ({
+          name: item.products?.name || 'Unknown Product',
+          size: item.size || undefined,
+          quantity: item.quantity,
+          price: item.price_at_time * item.quantity,
+        })) || [];
+
+        const subtotal = emailItems.reduce((sum: number, item: { price: number }) => sum + item.price, 0);
+        const shipping = orderData.total - subtotal;
+
+        await sendOrderConfirmationEmail({
+          orderId: orderData.id,
+          orderName: orderData.order_name || data.orderName,
+          customerName: orderData.customer_name || '고객',
+          customerEmail: orderData.customer_email || '',
+          items: emailItems,
+          subtotal,
+          shipping: shipping > 0 ? shipping : 0,
+          total: orderData.total,
+          paymentMethod: '토스페이먼츠',
+          shippingAddress,
+          orderDate: new Date(data.approvedAt).toLocaleString('ko-KR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+        });
+      }
+    } catch (emailError) {
+      console.error('Failed to send order confirmation email:', emailError);
+      // Don't fail the payment confirmation if email fails
     }
 
     return NextResponse.json({

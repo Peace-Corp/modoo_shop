@@ -200,8 +200,7 @@ export default function CheckoutPage() {
 
   // Calculate totals (must be before early return to maintain hook order)
   const subtotal = getTotal();
-  const shippingCost = SHIPPING_COSTS[shippingType];
-  const shipping = shippingType === 'domestic' && subtotal > 50000 ? 0 : shippingCost;
+  const shipping = SHIPPING_COSTS[shippingType];
   const total = subtotal + shipping;
 
   // Create order before payment
@@ -567,15 +566,15 @@ export default function CheckoutPage() {
                         onChange={() => setPaymentMethod('toss')}
                         className="sr-only"
                       />
-                      <div className="w-12 h-8 bg-blue-500 rounded flex items-center justify-center mr-4">
+                      {/* <div className="w-12 h-8 bg-blue-500 rounded flex items-center justify-center mr-4">
                         <span className="text-white font-bold text-xs">Toss</span>
-                      </div>
+                      </div> */}
                       <div className="flex-1">
-                        <p className="font-medium text-gray-900">토스페이먼츠</p>
-                        <p className="text-sm text-gray-500">토스로 빠르고 안전하게 결제</p>
+                        <p className="font-medium text-gray-900">간편결제</p>
+                        <p className="text-sm text-gray-500">빠르고 안전하게 결제</p>
                       </div>
                       {paymentMethod === 'toss' && (
-                        <svg className="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
                       )}
@@ -592,15 +591,12 @@ export default function CheckoutPage() {
                         onChange={() => setPaymentMethod('paypal')}
                         className="sr-only"
                       />
-                      <div className="w-12 h-8 bg-blue-600 rounded flex items-center justify-center mr-4">
-                        <span className="text-white font-bold text-xs">PP</span>
-                      </div>
                       <div className="flex-1">
                         <p className="font-medium text-gray-900">PayPal</p>
                         <p className="text-sm text-gray-500">페이팔로 안전하게 결제</p>
                       </div>
                       {paymentMethod === 'paypal' && (
-                        <svg className="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
                       )}

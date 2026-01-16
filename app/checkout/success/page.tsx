@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState, useRef, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
@@ -27,16 +27,28 @@ function PaymentSuccessContent() {
   const { clearCart } = useCart();
   const [isLoading, setIsLoading] = useState(true);
   const [result, setResult] = useState<PaymentResult | null>(null);
+  const isConfirming = useRef(false);
+  const hasConfirmed = useRef(false);
+
+  const clearCartOnce = useCallback(() => {
+    clearCart();
+  }, [clearCart]);
 
   useEffect(() => {
+    // Prevent duplicate calls from React strict mode or re-renders
+    if (isConfirming.current || hasConfirmed.current) {
+      return;
+    }
+
     const confirmPayment = async () => {
+      isConfirming.current = true;
+
       const paymentMethod = searchParams.get('paymentMethod');
       const orderId = searchParams.get('orderId');
 
       // Handle PayPal payments
       if (paymentMethod === 'paypal' && orderId) {
         try {
-          // Fetch order details from database
           const response = await fetch(`/api/orders/${orderId}`);
           const data = await response.json();
 
@@ -46,8 +58,8 @@ function PaymentSuccessContent() {
               error: data.error || '주문 정보를 불러올 수 없습니다.',
             });
           } else {
-            // Clear cart after successful PayPal payment
-            clearCart();
+            hasConfirmed.current = true;
+            clearCartOnce();
             setResult({
               success: true,
               payment: {
@@ -69,6 +81,7 @@ function PaymentSuccessContent() {
           });
         } finally {
           setIsLoading(false);
+          isConfirming.current = false;
         }
         return;
       }
@@ -83,6 +96,7 @@ function PaymentSuccessContent() {
           error: '결제 정보가 올바르지 않습니다.',
         });
         setIsLoading(false);
+        isConfirming.current = false;
         return;
       }
 
@@ -108,8 +122,8 @@ function PaymentSuccessContent() {
             code: data.code,
           });
         } else {
-          // Clear cart after successful Toss payment
-          clearCart();
+          hasConfirmed.current = true;
+          clearCartOnce();
           setResult(data);
         }
       } catch (error) {
@@ -120,11 +134,12 @@ function PaymentSuccessContent() {
         });
       } finally {
         setIsLoading(false);
+        isConfirming.current = false;
       }
     };
 
     confirmPayment();
-  }, [searchParams, clearCart]);
+  }, [searchParams, clearCartOnce]);
 
   if (isLoading) {
     return (
