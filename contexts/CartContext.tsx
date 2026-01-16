@@ -44,14 +44,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const existingItem = prevItems.find(item =>
         getCartItemKey(item.product.id, item.variant?.id) === itemKey
       );
+      const maxStock = variant?.stock;
+
       if (existingItem) {
-        return prevItems.map(item =>
-          getCartItemKey(item.product.id, item.variant?.id) === itemKey
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
+        return prevItems.map(item => {
+          if (getCartItemKey(item.product.id, item.variant?.id) === itemKey) {
+            const newQuantity = item.quantity + quantity;
+            // Check inventory limit for variant
+            const finalQuantity = maxStock !== undefined ? Math.min(newQuantity, maxStock) : newQuantity;
+            return { ...item, quantity: finalQuantity };
+          }
+          return item;
+        });
       }
-      return [...prevItems, { product, quantity, variant }];
+      // Check inventory limit for new items
+      const finalQuantity = maxStock !== undefined ? Math.min(quantity, maxStock) : quantity;
+      return [...prevItems, { product, quantity: finalQuantity, variant }];
     });
   };
 
@@ -69,11 +77,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
     const itemKey = getCartItemKey(productId, variantId);
     setItems(prevItems =>
-      prevItems.map(item =>
-        getCartItemKey(item.product.id, item.variant?.id) === itemKey
-          ? { ...item, quantity }
-          : item
-      )
+      prevItems.map(item => {
+        if (getCartItemKey(item.product.id, item.variant?.id) === itemKey) {
+          // Check inventory limit for variant
+          const maxStock = item.variant?.stock;
+          const finalQuantity = maxStock !== undefined ? Math.min(quantity, maxStock) : quantity;
+          return { ...item, quantity: finalQuantity };
+        }
+        return item;
+      })
     );
   };
 

@@ -353,13 +353,14 @@ export default function CheckoutPage() {
                       <Input
                         label={shippingType === 'domestic' ? '연락처' : 'Phone'}
                         type="tel"
-                        placeholder={shippingType === 'domestic' ? '010-0000-0000' : '+1 234 567 8900'}
+                        placeholder={shippingType === 'domestic' ? '01012341234' : '12345678900'}
                         value={shippingType === 'domestic' ? shippingInfo.phone : internationalShippingInfo.phone}
                         onChange={(e) => {
+                          const numericValue = e.target.value.replace(/[^0-9]/g, '');
                           if (shippingType === 'domestic') {
-                            setShippingInfo({ ...shippingInfo, phone: e.target.value });
+                            setShippingInfo({ ...shippingInfo, phone: numericValue });
                           } else {
-                            setInternationalShippingInfo({ ...internationalShippingInfo, phone: e.target.value });
+                            setInternationalShippingInfo({ ...internationalShippingInfo, phone: numericValue });
                           }
                         }}
                         required

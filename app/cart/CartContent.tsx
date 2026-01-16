@@ -105,24 +105,34 @@ export default function CartContent({ brands }: CartContentProps) {
                         </div>
 
                         <div className="mt-4 flex items-center justify-between">
-                          <div className="flex items-center border border-gray-200 rounded-lg">
-                            <button
-                              onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.variant?.id)}
-                              className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50"
-                            >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                              </svg>
-                            </button>
-                            <span className="w-12 text-center font-medium">{item.quantity}</span>
-                            <button
-                              onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.variant?.id)}
-                              className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50"
-                            >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                              </svg>
-                            </button>
+                          <div className="flex flex-col gap-1">
+                            <div className="flex items-center border border-gray-200 rounded-lg">
+                              <button
+                                onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.variant?.id)}
+                                className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                                </svg>
+                              </button>
+                              <span className="w-12 text-center font-medium">{item.quantity}</span>
+                              <button
+                                onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.variant?.id)}
+                                disabled={item.variant && item.quantity >= item.variant.stock}
+                                className={`w-10 h-10 flex items-center justify-center ${
+                                  item.variant && item.quantity >= item.variant.stock
+                                    ? 'text-gray-300 cursor-not-allowed'
+                                    : 'text-gray-600 hover:bg-gray-50'
+                                }`}
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                </svg>
+                              </button>
+                            </div>
+                            {item.variant && item.quantity >= item.variant.stock && (
+                              <p className="text-xs text-orange-600">최대 수량입니다</p>
+                            )}
                           </div>
                           <div className="text-right">
                             <p className="text-lg font-bold text-gray-900">
@@ -166,55 +176,29 @@ export default function CartContent({ brands }: CartContentProps) {
                   <span>상품금액 ({items.length}개)</span>
                   <span>{subtotal.toLocaleString()}원</span>
                 </div>
-                <div className="flex justify-between text-gray-600">
+                {/* <div className="flex justify-between text-gray-600">
                   <span>배송비</span>
                   <span>{shipping === 0 ? '무료' : `${shipping.toLocaleString()}원`}</span>
-                </div>
+                </div> */}
                 <div className="border-t border-gray-200 pt-3 flex justify-between font-semibold text-gray-900">
-                  <span>총 결제금액</span>
+                  <span>총 금액</span>
                   <span>{total.toLocaleString()}원</span>
                 </div>
               </div>
 
-              {shipping > 0 && (
+              {/* {shipping > 0 && (
                 <div className="bg-indigo-50 rounded-lg p-3 mb-6">
                   <p className="text-sm text-indigo-700">
                     {(50000 - subtotal).toLocaleString()}원 더 담으면 무료배송!
                   </p>
                 </div>
-              )}
+              )} */}
 
               <Link href="/checkout" className="block">
                 <Button className="w-full" size="lg">
                   결제하기
                 </Button>
               </Link>
-
-              <div className="mt-6 flex items-center justify-center gap-4 text-gray-400">
-                <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-                <span className="text-sm">안전한 결제</span>
-              </div>
-
-              {/* Payment Methods */}
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <p className="text-sm text-gray-500 text-center mb-3">결제수단</p>
-                <div className="flex justify-center gap-3">
-                  <div className="w-12 h-8 bg-gray-100 rounded flex items-center justify-center text-xs font-bold text-gray-600">
-                    VISA
-                  </div>
-                  <div className="w-12 h-8 bg-gray-100 rounded flex items-center justify-center text-xs font-bold text-gray-600">
-                    MC
-                  </div>
-                  <div className="w-12 h-8 bg-blue-100 rounded flex items-center justify-center text-xs font-bold text-blue-600">
-                    Toss
-                  </div>
-                  <div className="w-12 h-8 bg-blue-50 rounded flex items-center justify-center text-xs font-bold text-blue-700">
-                    PP
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
