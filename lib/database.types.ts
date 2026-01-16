@@ -210,7 +210,6 @@ export type Database = {
           price: number
           rating: number | null
           review_count: number | null
-          stock: number
           tags: string[] | null
           updated_at: string | null
         }
@@ -227,7 +226,6 @@ export type Database = {
           price: number
           rating?: number | null
           review_count?: number | null
-          stock?: number
           tags?: string[] | null
           updated_at?: string | null
         }
@@ -244,7 +242,6 @@ export type Database = {
           price?: number
           rating?: number | null
           review_count?: number | null
-          stock?: number
           tags?: string[] | null
           updated_at?: string | null
         }

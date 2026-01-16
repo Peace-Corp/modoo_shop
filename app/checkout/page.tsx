@@ -327,28 +327,34 @@ export default function CheckoutPage() {
 
               {/* Cart Items */}
               <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
-                {items.map(item => (
-                  <div key={item.product.id} className="flex gap-3">
-                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 shrink-0">
-                      <Image
-                        src={item.product.images[0]}
-                        alt={item.product.name}
-                        width={64}
-                        height={64}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
-                        {item.product.name}
+                {items.map(item => {
+                  const itemKey = item.variant ? `${item.product.id}-${item.variant.id}` : item.product.id;
+                  return (
+                    <div key={itemKey} className="flex gap-3">
+                      <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 shrink-0">
+                        <Image
+                          src={item.product.images[0]}
+                          alt={item.product.name}
+                          width={64}
+                          height={64}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {item.product.name}
+                        </p>
+                        {item.variant && (
+                          <p className="text-xs text-gray-600">사이즈: {item.variant.size}</p>
+                        )}
+                        <p className="text-sm text-gray-500">수량: {item.quantity}</p>
+                      </div>
+                      <p className="text-sm font-medium text-gray-900">
+                        {(item.product.price * item.quantity).toLocaleString()}원
                       </p>
-                      <p className="text-sm text-gray-500">수량: {item.quantity}</p>
                     </div>
-                    <p className="text-sm font-medium text-gray-900">
-                      {(item.product.price * item.quantity).toLocaleString()}원
-                    </p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="border-t border-gray-200 pt-4 space-y-3">

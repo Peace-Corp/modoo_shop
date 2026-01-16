@@ -89,12 +89,6 @@ export default function AdminProducts({ products, brands }: AdminProductsProps) 
                 <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Price
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Stock
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
                 <th className="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
@@ -137,18 +131,6 @@ export default function AdminProducts({ products, brands }: AdminProductsProps) 
                           </p>
                         )}
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`font-medium ${product.stock < 20 ? 'text-red-600' : 'text-gray-900'}`}>
-                        {product.stock}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        product.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                      }`}>
-                        {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
-                      </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
                       <button
@@ -231,12 +213,6 @@ export default function AdminProducts({ products, brands }: AdminProductsProps) 
                   defaultValue={editingProduct?.originalPrice}
                 />
               </div>
-              <Input
-                label="Stock"
-                type="number"
-                defaultValue={editingProduct?.stock}
-                required
-              />
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                 <textarea

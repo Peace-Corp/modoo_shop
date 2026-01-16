@@ -58,9 +58,10 @@ export default function CartContent({ brands }: CartContentProps) {
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
               {items.map((item, index) => {
                 const brand = brandMap.get(item.product.brandId);
+                const itemKey = item.variant ? `${item.product.id}-${item.variant.id}` : item.product.id;
                 return (
                   <div
-                    key={item.product.id}
+                    key={itemKey}
                     className={`p-6 ${index !== items.length - 1 ? 'border-b border-gray-100' : ''}`}
                   >
                     <div className="flex gap-6">
@@ -84,12 +85,17 @@ export default function CartContent({ brands }: CartContentProps) {
                             <h3 className="text-lg font-semibold text-gray-900 mb-1">
                               {item.product.name}
                             </h3>
+                            {item.variant && (
+                              <p className="text-sm text-gray-700 font-medium mb-1">
+                                사이즈: {item.variant.size}
+                              </p>
+                            )}
                             <p className="text-sm text-gray-500 line-clamp-1">
                               {item.product.description}
                             </p>
                           </div>
                           <button
-                            onClick={() => removeFromCart(item.product.id)}
+                            onClick={() => removeFromCart(item.product.id, item.variant?.id)}
                             className="text-gray-400 hover:text-red-500 transition-colors"
                           >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,7 +107,7 @@ export default function CartContent({ brands }: CartContentProps) {
                         <div className="mt-4 flex items-center justify-between">
                           <div className="flex items-center border border-gray-200 rounded-lg">
                             <button
-                              onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                              onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.variant?.id)}
                               className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,7 +116,7 @@ export default function CartContent({ brands }: CartContentProps) {
                             </button>
                             <span className="w-12 text-center font-medium">{item.quantity}</span>
                             <button
-                              onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                              onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.variant?.id)}
                               className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50"
                             >
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

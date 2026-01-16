@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/Button';
 import { ProductCard } from '@/components/products/ProductCard';
-import { Product, Brand } from '@/types';
+import { Product, Brand, ProductVariant } from '@/types';
 
 interface ProductDetailProps {
   product: Product;
@@ -19,16 +19,22 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isAdded, setIsAdded] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
+
+  const hasVariants = product.variants && product.variants.length > 0;
+  const currentStock = selectedVariant?.stock ?? 0;
 
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 
   const handleAddToCart = () => {
-    addToCart(product, quantity);
+    addToCart(product, quantity, selectedVariant ?? undefined);
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
   };
+
+  const canAddToCart = selectedVariant !== null && selectedVariant.stock > 0;
 
   return (
     <div className="py-8">
@@ -134,18 +140,52 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
             {/* Description */}
             <p className="text-gray-600 mb-6">{product.description}</p>
 
+            {/* Size Selector */}
+            {hasVariants && (
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-900 mb-3">사이즈 선택</h3>
+                <div className="flex flex-wrap gap-2">
+                  {product.variants!.map((variant) => (
+                    <button
+                      key={variant.id}
+                      onClick={() => {
+                        setSelectedVariant(variant);
+                        setQuantity(1);
+                      }}
+                      disabled={variant.stock === 0}
+                      className={`px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
+                        selectedVariant?.id === variant.id
+                          ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
+                          : variant.stock === 0
+                          ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed line-through'
+                          : 'border-gray-300 hover:border-gray-400 text-gray-700'
+                      }`}
+                    >
+                      {variant.size}
+                      {variant.stock === 0 && ' (품절)'}
+                    </button>
+                  ))}
+                </div>
+                {hasVariants && !selectedVariant && (
+                  <p className="mt-2 text-sm text-amber-600">사이즈를 선택해주세요</p>
+                )}
+              </div>
+            )}
+
             {/* Stock Status */}
             <div className="flex items-center gap-2 mb-6">
-              {product.stock > 0 ? (
+              {currentStock > 0 ? (
                 <>
                   <div className="w-2 h-2 bg-green-500 rounded-full" />
                   <span className="text-green-600 font-medium">재고 있음</span>
-                  <span className="text-gray-400">({product.stock}개 남음)</span>
+                  <span className="text-gray-400">({currentStock}개 남음)</span>
                 </>
               ) : (
                 <>
                   <div className="w-2 h-2 bg-red-500 rounded-full" />
-                  <span className="text-red-600 font-medium">품절</span>
+                  <span className="text-red-600 font-medium">
+                    {hasVariants && !selectedVariant ? '사이즈 선택 필요' : '품절'}
+                  </span>
                 </>
               )}
             </div>
@@ -156,6 +196,7 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   className="w-12 h-12 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                  disabled={!canAddToCart}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
@@ -163,8 +204,9 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
                 </button>
                 <span className="w-12 text-center font-medium">{quantity}</span>
                 <button
-                  onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                  onClick={() => setQuantity(Math.min(currentStock, quantity + 1))}
                   className="w-12 h-12 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                  disabled={!canAddToCart}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -175,7 +217,7 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
                 onClick={handleAddToCart}
                 size="lg"
                 className="flex-1"
-                disabled={product.stock === 0}
+                disabled={!canAddToCart}
               >
                 {isAdded ? (
                   <>
@@ -184,6 +226,8 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
                     </svg>
                     담기 완료
                   </>
+                ) : hasVariants && !selectedVariant ? (
+                  '사이즈를 선택해주세요'
                 ) : (
                   '장바구니 담기'
                 )}
@@ -204,7 +248,7 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
             </div>
 
             {/* Features */}
-            <div className="border-t border-gray-200 pt-6">
+            {/* <div className="border-t border-gray-200 pt-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
@@ -229,7 +273,7 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -237,7 +281,7 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
         {relatedProducts.length > 0 && (
           <div className="mt-16">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">관련 상품</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map(relatedProduct => (
                 <ProductCard key={relatedProduct.id} product={relatedProduct} brand={brand} />
               ))}

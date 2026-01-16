@@ -99,7 +99,7 @@ export default async function HomePage() {
               </svg>
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="flex gap-6">
             {featuredBrands.map((brand) => (
               <BrandCard key={brand.id} brand={brand} />
             ))}

@@ -1,3 +1,12 @@
+// Product Variant Types
+export interface ProductVariant {
+  id: string;
+  productId: string;
+  size: string;
+  stock: number;
+  sortOrder: number;
+}
+
 // Product Types
 export interface Product {
   id: string;
@@ -8,12 +17,12 @@ export interface Product {
   images: string[];
   brandId: string;
   category: string;
-  stock: number;
   rating: number;
   reviewCount: number;
   tags: string[];
   createdAt: string;
   featured?: boolean;
+  variants?: ProductVariant[];
 }
 
 // Brand Types
@@ -51,6 +60,7 @@ export interface Address {
 export interface CartItem {
   product: Product;
   quantity: number;
+  variant?: ProductVariant;
 }
 
 export interface Cart {

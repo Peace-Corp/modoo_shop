@@ -1,8 +1,18 @@
-import { Product } from '@/types';
+import { Product, ProductVariant } from '@/types';
 import { supabase } from '@/lib/supabase';
 import { Tables } from '@/lib/database.types';
 
 type ProductRow = Tables<'products'>;
+
+interface VariantRow {
+  id: string;
+  product_id: string;
+  size: string;
+  stock: number;
+  sort_order: number;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
 
 // Fetch all products from Supabase
 export async function getProducts(): Promise<Product[]> {
@@ -19,11 +29,11 @@ export async function getProducts(): Promise<Product[]> {
   return data.map(mapProductFromDb);
 }
 
-// Get product by ID
+// Get product by ID (with variants)
 export async function getProductById(id: string): Promise<Product | undefined> {
   const { data, error } = await supabase
     .from('products')
-    .select('*')
+    .select('*, product_variants(*)')
     .eq('id', id)
     .single();
 
@@ -32,7 +42,11 @@ export async function getProductById(id: string): Promise<Product | undefined> {
     return undefined;
   }
 
-  return mapProductFromDb(data);
+  const variants = (data.product_variants as VariantRow[] | undefined)?.map(mapVariantFromDb) ?? [];
+  return {
+    ...mapProductFromDb(data),
+    variants: variants.sort((a, b) => a.sortOrder - b.sortOrder),
+  };
 }
 
 // Get products by brand ID
@@ -134,11 +148,21 @@ function mapProductFromDb(row: ProductRow): Product {
     images: row.images,
     brandId: row.brand_id,
     category: row.category,
-    stock: row.stock,
     rating: row.rating ?? 0,
     reviewCount: row.review_count ?? 0,
     tags: row.tags ?? [],
     createdAt: row.created_at?.split('T')[0] ?? new Date().toISOString().split('T')[0],
     featured: row.featured ?? false,
+  };
+}
+
+// Map database row to ProductVariant type
+function mapVariantFromDb(row: VariantRow): ProductVariant {
+  return {
+    id: row.id,
+    productId: row.product_id,
+    size: row.size,
+    stock: row.stock,
+    sortOrder: row.sort_order,
   };
 }
