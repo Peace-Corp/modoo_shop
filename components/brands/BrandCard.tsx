@@ -14,9 +14,9 @@ export function BrandCard({ brand, variant = 'small' }: BrandCardProps) {
     return (
       <Link
         href={`/brands/${brand.slug}`}
-        className="flex items-center gap-4 p-4 rounded-xl bg-white shadow-sm hover:shadow-lg transition-shadow"
+        className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-white shadow-sm hover:shadow-lg transition-shadow"
       >
-        <div className="size-16 md:size-20 rounded-full overflow-hidden shrink-0">
+        <div className="size-12 sm:size-16 md:size-20 rounded-full overflow-hidden shrink-0">
           <Image
             src={brand.logo}
             alt={brand.name}
@@ -26,8 +26,8 @@ export function BrandCard({ brand, variant = 'small' }: BrandCardProps) {
           />
         </div>
         <div className="flex flex-col min-w-0">
-          <h3 className="font-semibold text-black/90 text-lg">{brand.name}</h3>
-          <p className="text-sm text-gray-500 line-clamp-2">{brand.description}</p>
+          <h3 className="font-semibold text-black/90 text-sm sm:text-lg">{brand.name}</h3>
+          <p className="text-xs sm:text-sm text-gray-500 line-clamp-2">{brand.description}</p>
         </div>
       </Link>
     );
@@ -38,7 +38,7 @@ export function BrandCard({ brand, variant = 'small' }: BrandCardProps) {
       href={`/brands/${brand.slug}`}
       className="flex flex-col items-center w-fit"
     >
-      <div className="size-28 rounded-full shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
+      <div className="size-20 sm:size-28 rounded-full shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
         <Image
           src={brand.logo}
           alt={brand.name}
@@ -47,7 +47,7 @@ export function BrandCard({ brand, variant = 'small' }: BrandCardProps) {
           className="object-cover w-full h-full"
         />
       </div>
-      <h3 className="font-semibold text-black/90 text-lg">{brand.name}</h3>
+      <h3 className="font-semibold text-black/90 text-sm sm:text-lg">{brand.name}</h3>
     </Link>
   );
 }

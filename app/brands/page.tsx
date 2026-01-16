@@ -4,19 +4,19 @@ import { getBrands } from '@/data/brands';
 export default async function BrandsPage() {
   const brands = await getBrands();
   return (
-    <div className="py-8">
+    <div className="py-3 sm:py-8">
       {/* Header */}
-      <div className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold mb-4">입점 브랜드</h1>
-          <p className="text-black/40 max-w-2xl mx-auto">
+      <div className="py-6 sm:py-16">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-2xl sm:text-4xl font-bold mb-2 sm:mb-4">입점 브랜드</h1>
+          <p className="text-sm sm:text-base text-black/40 max-w-2xl mx-auto">
             엄선된 프리미엄 브랜드들을 만나보세요.
             품질, 스타일, 고객 만족을 최우선으로 선정했습니다.
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-12">
         {/* Featured Brands */}
         {/* <div className="mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">추천 브랜드</h2>
@@ -29,8 +29,8 @@ export default async function BrandsPage() {
 
         {/* All Brands */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">전체 브랜드</h2>
-          <div className="flex flex-col gap-6">
+          <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-6">전체 브랜드</h2>
+          <div className="flex flex-col gap-3 sm:gap-6">
             {brands.map(brand => (
               <BrandCard key={brand.id} brand={brand} variant='large' />
             ))}

@@ -29,7 +29,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
   return (
     <div className="pb-8">
       {/* Brand Header */}
-      <div className="relative h-64 md:h-80">
+      <div className="relative aspect-21/9">
         <Image
           src={brand.banner}
           alt={brand.name}

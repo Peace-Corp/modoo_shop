@@ -37,10 +37,10 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
   const canAddToCart = selectedVariant !== null && selectedVariant.stock > 0;
 
   return (
-    <div className="py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="py-3 sm:py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm mb-8">
+        <nav className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm mb-4 sm:mb-8">
           <Link href="/" className="text-gray-500 hover:text-gray-700">홈</Link>
           <span className="text-gray-400">/</span>
           {brand && (
@@ -51,14 +51,14 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
               <span className="text-gray-400">/</span>
             </>
           )}
-          <span className="text-gray-900 font-medium">{product.name}</span>
+          <span className="text-gray-900 font-medium truncate max-w-[150px] sm:max-w-none">{product.name}</span>
         </nav>
 
         {/* Product Details */}
         <div className="lg:grid lg:grid-cols-2 lg:gap-12">
           {/* Images */}
           <div>
-            <div className="aspect-square rounded-2xl overflow-hidden bg-gray-100 mb-4">
+            <div className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100 mb-2 sm:mb-4">
               <Image
                 src={product.images[selectedImage]}
                 alt={product.name}
@@ -69,12 +69,12 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
               />
             </div>
             {product.images.length > 1 && (
-              <div className="flex gap-3">
+              <div className="flex gap-2 sm:gap-3">
                 {product.images.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                    className={`w-14 h-14 sm:w-20 sm:h-20 rounded-md sm:rounded-lg overflow-hidden border-2 transition-all ${
                       selectedImage === index ? 'border-indigo-600' : 'border-transparent'
                     }`}
                   >
@@ -92,24 +92,24 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
           </div>
 
           {/* Info */}
-          <div>
+          <div className="mt-3 sm:mt-0">
             {brand && (
               <Link
                 href={`/brands/${brand.slug}`}
-                className="inline-block text-sm font-medium text-indigo-600 hover:underline mb-2"
+                className="inline-block text-xs sm:text-sm font-medium text-indigo-600 hover:underline mb-1 sm:mb-2"
               >
                 {brand.name}
               </Link>
             )}
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>
+            <h1 className="text-lg sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-4">{product.name}</h1>
 
             {/* Rating */}
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-1 sm:gap-2 mb-2 sm:mb-4">
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => (
                   <svg
                     key={i}
-                    className={`w-5 h-5 ${i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-300'}`}
+                    className={`w-3.5 h-3.5 sm:w-5 sm:h-5 ${i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-300'}`}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -117,20 +117,20 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
                   </svg>
                 ))}
               </div>
-              <span className="text-gray-600">{product.rating}</span>
+              <span className="text-xs sm:text-base text-gray-600">{product.rating}</span>
               <span className="text-gray-400">|</span>
-              <span className="text-gray-600">{product.reviewCount}개 리뷰</span>
+              <span className="text-xs sm:text-base text-gray-600">{product.reviewCount}개 리뷰</span>
             </div>
 
             {/* Price */}
-            <div className="flex items-center gap-3 mb-6">
-              <span className="text-3xl font-bold text-gray-900">{product.price.toLocaleString()}원</span>
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-6">
+              <span className="text-xl sm:text-3xl font-bold text-gray-900">{product.price.toLocaleString()}원</span>
               {product.originalPrice && (
                 <>
-                  <span className="text-xl text-gray-400 line-through">
+                  <span className="text-sm sm:text-xl text-gray-400 line-through">
                     {product.originalPrice.toLocaleString()}원
                   </span>
-                  <span className="bg-red-100 text-red-700 text-sm font-medium px-2 py-1 rounded">
+                  <span className="bg-red-100 text-red-700 text-xs sm:text-sm font-medium px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
                     -{discount}%
                   </span>
                 </>
@@ -138,13 +138,13 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
             </div>
 
             {/* Description */}
-            <p className="text-gray-600 mb-6">{product.description}</p>
+            <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-6">{product.description}</p>
 
             {/* Size Selector */}
             {hasVariants && (
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-900 mb-3">사이즈 선택</h3>
-                <div className="flex flex-wrap gap-2">
+              <div className="mb-3 sm:mb-6">
+                <h3 className="text-xs sm:text-sm font-medium text-gray-900 mb-2 sm:mb-3">사이즈 선택</h3>
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {product.variants!.map((variant) => (
                     <button
                       key={variant.id}
@@ -153,7 +153,7 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
                         setQuantity(1);
                       }}
                       disabled={variant.stock === 0}
-                      className={`px-4 py-2 rounded-lg border-2 text-sm font-medium transition-all ${
+                      className={`px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-md sm:rounded-lg border-2 text-xs sm:text-sm font-medium transition-all ${
                         selectedVariant?.id === variant.id
                           ? 'border-indigo-600 bg-indigo-50 text-indigo-600'
                           : variant.stock === 0
@@ -167,23 +167,23 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
                   ))}
                 </div>
                 {hasVariants && !selectedVariant && (
-                  <p className="mt-2 text-sm text-amber-600">사이즈를 선택해주세요</p>
+                  <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-amber-600">사이즈를 선택해주세요</p>
                 )}
               </div>
             )}
 
             {/* Stock Status */}
-            <div className="flex items-center gap-2 mb-6">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-6">
               {currentStock > 0 ? (
                 <>
-                  <div className="w-2 h-2 bg-green-500 rounded-full" />
-                  <span className="text-green-600 font-medium">재고 있음</span>
-                  <span className="text-gray-400">({currentStock}개 남음)</span>
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full" />
+                  <span className="text-xs sm:text-base text-green-600 font-medium">재고 있음</span>
+                  <span className="text-xs sm:text-base text-gray-400">({currentStock}개 남음)</span>
                 </>
               ) : (
                 <>
-                  <div className="w-2 h-2 bg-red-500 rounded-full" />
-                  <span className="text-red-600 font-medium">
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full" />
+                  <span className="text-xs sm:text-base text-red-600 font-medium">
                     {hasVariants && !selectedVariant ? '사이즈 선택 필요' : '품절'}
                   </span>
                 </>
@@ -191,24 +191,24 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
             </div>
 
             {/* Quantity & Add to Cart */}
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex items-center border border-gray-300 rounded-lg">
+            <div className="flex items-center gap-2 sm:gap-4 mb-3 sm:mb-6">
+              <div className="flex items-center border border-gray-300 rounded-md sm:rounded-lg">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-12 h-12 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                  className="w-9 h-9 sm:w-12 sm:h-12 flex items-center justify-center text-gray-600 hover:bg-gray-50"
                   disabled={!canAddToCart}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
                   </svg>
                 </button>
-                <span className="w-12 text-center font-medium">{quantity}</span>
+                <span className="w-8 sm:w-12 text-center text-sm sm:text-base font-medium">{quantity}</span>
                 <button
                   onClick={() => setQuantity(Math.min(currentStock, quantity + 1))}
-                  className="w-12 h-12 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                  className="w-9 h-9 sm:w-12 sm:h-12 flex items-center justify-center text-gray-600 hover:bg-gray-50"
                   disabled={!canAddToCart}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                 </button>
@@ -216,12 +216,12 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
               <Button
                 onClick={handleAddToCart}
                 size="lg"
-                className="flex-1"
+                className="flex-1 text-xs sm:text-base py-2 sm:py-3"
                 disabled={!canAddToCart}
               >
                 {isAdded ? (
                   <>
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     담기 완료
@@ -235,12 +235,12 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
             </div>
 
             {/* Tags */}
-            <div className="flex flex-wrap gap-2 mb-6">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-6">
               {product.tags.map(tag => (
                 <Link
                   key={tag}
                   href={`/search?q=${tag}`}
-                  className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full hover:bg-gray-200"
+                  className="px-2 sm:px-3 py-0.5 sm:py-1 bg-gray-100 text-gray-600 text-xs sm:text-sm rounded-full hover:bg-gray-200"
                 >
                   #{tag}
                 </Link>
@@ -279,9 +279,9 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="mt-16">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">관련 상품</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="mt-8 sm:mt-16">
+            <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-6">관련 상품</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
               {relatedProducts.map(relatedProduct => (
                 <ProductCard key={relatedProduct.id} product={relatedProduct} brand={brand} />
               ))}

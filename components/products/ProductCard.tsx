@@ -52,7 +52,7 @@ export function ProductCard({ product, brand }: ProductCardProps) {
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
 
           {/* Cart Button */}
-          <button
+          {/* <button
             onClick={handleCartClick}
             className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 hover:bg-indigo-600 hover:text-white text-gray-700"
             aria-label="장바구니에 담기"
@@ -71,7 +71,7 @@ export function ProductCard({ product, brand }: ProductCardProps) {
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
-          </button>
+          </button> */}
         </div>
 
         <div className="p-2 sm:p-4">
