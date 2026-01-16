@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import TossPaymentWidget from '@/components/TossPaymentWidget';
+import PayPalPaymentButton from '@/components/PayPalPaymentButton';
 
 type PaymentMethod = 'toss' | 'paypal';
 type ShippingType = 'domestic' | 'international';
@@ -72,7 +73,6 @@ export default function CheckoutPage() {
   const { items, getTotal, clearCart } = useCart();
   const { user } = useAuth();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('toss');
-  const [isProcessing, setIsProcessing] = useState(false);
   const [step, setStep] = useState<'info' | 'payment' | 'success'>('info');
   const [orderNumber, setOrderNumber] = useState('');
   const [shippingType, setShippingType] = useState<ShippingType>('domestic');
@@ -138,6 +138,11 @@ export default function CheckoutPage() {
       setInternationalShippingInfo(prev => ({ ...prev, email: user.email }));
     }
   }, [user]);
+
+  // Scroll to top when step changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [step]);
 
   // JUSO API search function
   const searchAddress = useCallback(async (keyword: string) => {
@@ -271,20 +276,23 @@ export default function CheckoutPage() {
 
   const handleSubmitInfo = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate required fields based on shipping type
+    if (shippingType === 'domestic') {
+      const { name, email, phone, address, zipCode } = shippingInfo;
+      if (!name.trim() || !email.trim() || !phone.trim() || !address.trim() || !zipCode.trim()) {
+        alert('모든 필수 항목을 입력해주세요.');
+        return;
+      }
+    } else {
+      const { name, email, phone, country, postalCode, state, province, addressLine1 } = internationalShippingInfo;
+      if (!name.trim() || !email.trim() || !phone.trim() || !country || !postalCode.trim() || !state.trim() || !province.trim() || !addressLine1.trim()) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+    }
+
     setStep('payment');
-  };
-
-  const handlePayment = async () => {
-    setIsProcessing(true);
-
-    // Simulate payment processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    // Use the same orderId as the order number
-    setOrderNumber(orderId);
-    clearCart();
-    setStep('success');
-    setIsProcessing(false);
   };
 
   if (step === 'success') {
@@ -668,57 +676,38 @@ export default function CheckoutPage() {
                   ) : (
                     <div>
                       <h3 className="font-medium text-gray-900 mb-4">PayPal</h3>
-                      <div className="bg-gray-50 rounded-lg p-8 text-center">
-                        <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                          <span className="text-white font-bold text-xl">P</span>
-                        </div>
-                        <p className="text-gray-600 mb-2">PayPal 결제</p>
-                        <p className="text-sm text-gray-500">
-                          &quot;결제하기&quot; 버튼을 눌러 PayPal로 결제를 완료하세요
-                        </p>
-                        <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm text-blue-700">
-                          실제 서비스에서는 PayPal SDK가 연동됩니다.
-                          <br />
-                          @paypal/react-paypal-js 사용
-                        </div>
-                      </div>
+                      <PayPalPaymentButton
+                        amount={total}
+                        orderId={orderId}
+                        orderName={orderName}
+                        onBeforeCreateOrder={createOrder}
+                        onSuccess={(details) => {
+                          console.log('PayPal payment success:', details);
+                          setOrderNumber(orderId);
+                          clearCart();
+                          setStep('success');
+                        }}
+                        onError={(error) => {
+                          console.error('PayPal payment error:', error);
+                          alert('결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+                        }}
+                        onCancel={() => {
+                          console.log('PayPal payment cancelled');
+                        }}
+                      />
                     </div>
                   )}
                 </div>
 
-                {/* Back button - only show for PayPal since Toss has its own button */}
-                {paymentMethod === 'paypal' && (
-                  <div className="flex gap-4">
-                    <Button
-                      variant="outline"
-                      size="lg"
-                      onClick={() => setStep('info')}
-                      className="flex-1"
-                    >
-                      이전
-                    </Button>
-                    <Button
-                      size="lg"
-                      onClick={handlePayment}
-                      isLoading={isProcessing}
-                      className="flex-1"
-                    >
-                      {total.toLocaleString()}원 결제하기
-                    </Button>
-                  </div>
-                )}
-
-                {/* Back button for Toss */}
-                {paymentMethod === 'toss' && (
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    onClick={() => setStep('info')}
-                    className="w-full mt-4"
-                  >
-                    이전으로 돌아가기
-                  </Button>
-                )}
+                {/* Back button */}
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setStep('info')}
+                  className="w-full mt-4"
+                >
+                  이전으로 돌아가기
+                </Button>
               </div>
             )}
           </div>

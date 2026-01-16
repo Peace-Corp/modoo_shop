@@ -98,6 +98,45 @@ export type Database = {
         }
         Relationships: []
       }
+      hero_banners: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          id: string
+          image_link: string
+          is_active: boolean | null
+          link: string | null
+          subtitle: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          image_link: string
+          is_active?: boolean | null
+          link?: string | null
+          subtitle?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          image_link?: string
+          is_active?: boolean | null
+          link?: string | null
+          subtitle?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string | null
@@ -383,7 +422,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      decrement_variant_stock: {
+        Args: { p_quantity: number; p_variant_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

@@ -83,6 +83,17 @@ export interface Order {
   updatedAt: string;
 }
 
+// Hero Banner Types
+export interface HeroBanner {
+  id: string;
+  title: string;
+  subtitle?: string;
+  link?: string;
+  tags: string[];
+  displayOrder: number;
+  imageLink: string;
+}
+
 // Admin Dashboard Types
 export interface SalesData {
   date: string;
