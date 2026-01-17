@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { sendOrderConfirmationEmail } from '@/lib/mailjet';
+import { sendOrderNotification } from '@/lib/discord';
 
 const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
 const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET;
@@ -169,10 +170,22 @@ export async function POST(request: NextRequest) {
             minute: '2-digit',
           }),
         });
+
+        // Send Discord notification
+        await sendOrderNotification({
+          orderId: orderData.id,
+          orderName: orderData.order_name || '',
+          customerName: orderData.customer_name || '고객',
+          customerEmail: orderData.customer_email || captureData.payer?.email_address || '',
+          items: emailItems,
+          total: orderData.total,
+          paymentMethod: 'PayPal',
+          shippingAddress,
+        });
       }
-    } catch (emailError) {
-      console.error('Failed to send order confirmation email:', emailError);
-      // Don't fail the payment capture if email fails
+    } catch (notificationError) {
+      console.error('Failed to send notifications:', notificationError);
+      // Don't fail the payment capture if notifications fail
     }
 
     return NextResponse.json({
