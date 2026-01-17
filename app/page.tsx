@@ -5,6 +5,8 @@ import { HeroBanner } from '@/components/home/HeroBanner';
 import { getFeaturedProducts } from '@/data/products';
 import { getFeaturedBrands, getBrands } from '@/data/brands';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const [featuredProducts, featuredBrands, allBrands] = await Promise.all([
     getFeaturedProducts(),

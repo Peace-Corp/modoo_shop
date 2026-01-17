@@ -6,6 +6,8 @@ import { getBrandBySlug, getBrands } from '@/data/brands';
 import { getProductsByBrandId } from '@/data/products';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 interface BrandPageProps {
   params: Promise<{ slug: string }>;
 }

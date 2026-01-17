@@ -1,6 +1,8 @@
 import { BrandCard } from '@/components/brands/BrandCard';
 import { getBrands } from '@/data/brands';
 
+export const dynamic = 'force-dynamic';
+
 export default async function BrandsPage() {
   const brands = await getBrands();
   return (
