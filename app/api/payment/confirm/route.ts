@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { sendOrderConfirmationEmail } from '@/lib/mailjet';
+import { sendOrderNotification } from '@/lib/discord';
 
 const TOSS_SECRET_KEY = process.env.TOSS_SECRET_KEY;
 const TOSS_API_URL = 'https://api.tosspayments.com/v1/payments/confirm';
@@ -171,10 +172,22 @@ export async function POST(request: NextRequest) {
             minute: '2-digit',
           }),
         });
+
+        // Send Discord notification
+        await sendOrderNotification({
+          orderId: orderData.id,
+          orderName: orderData.order_name || data.orderName,
+          customerName: orderData.customer_name || '고객',
+          customerEmail: orderData.customer_email || '',
+          items: emailItems,
+          total: orderData.total,
+          paymentMethod: '토스페이먼츠',
+          shippingAddress,
+        });
       }
-    } catch (emailError) {
-      console.error('Failed to send order confirmation email:', emailError);
-      // Don't fail the payment confirmation if email fails
+    } catch (notificationError) {
+      console.error('Failed to send notifications:', notificationError);
+      // Don't fail the payment confirmation if notifications fail
     }
 
     return NextResponse.json({
