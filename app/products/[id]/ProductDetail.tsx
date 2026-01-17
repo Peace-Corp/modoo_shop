@@ -300,14 +300,11 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
         {product.descriptionImage && (
           <div className="mt-8 sm:mt-16">
             <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-6">상품 상세</h2>
-            <div className="rounded-xl sm:rounded-2xl overflow-hidden bg-gray-100">
-              <Image
+            <div className="bg-gray-100">
+              <img
                 src={product.descriptionImage}
                 alt={`${product.name} 상세 정보`}
-                width={1200}
-                unoptimized
-                height={1600}
-                className="w-full h-auto object-contain"
+                className="w-full h-auto"
               />
             </div>
           </div>

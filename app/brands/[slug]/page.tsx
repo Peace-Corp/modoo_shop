@@ -4,9 +4,23 @@ import { notFound } from 'next/navigation';
 import { ProductCard } from '@/components/products/ProductCard';
 import { getBrandBySlug, getBrands } from '@/data/brands';
 import { getProductsByBrandId } from '@/data/products';
+import type { Metadata } from 'next';
 
 interface BrandPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: BrandPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const brand = await getBrandBySlug(slug);
+
+  if (!brand) {
+    return { title: 'Brand Not Found | 모두굿즈' };
+  }
+
+  return {
+    title: `${brand.name} | 모두굿즈`,
+  };
 }
 
 export async function generateStaticParams() {
