@@ -65,6 +65,28 @@ export async function getProductsByBrandId(brandId: string): Promise<Product[]> 
   return data.map(mapProductFromDb);
 }
 
+// Get products by brand ID with variants included
+export async function getProductsByBrandIdWithVariants(brandId: string): Promise<Product[]> {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*, product_variants(*)')
+    .eq('brand_id', brandId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching products by brand with variants:', error);
+    return [];
+  }
+
+  return data.map(row => {
+    const variants = (row.product_variants as VariantRow[] | undefined)?.map(mapVariantFromDb) ?? [];
+    return {
+      ...mapProductFromDb(row),
+      variants: variants.sort((a, b) => a.sortOrder - b.sortOrder),
+    };
+  });
+}
+
 // Get featured products
 export async function getFeaturedProducts(): Promise<Product[]> {
   const { data, error } = await supabase

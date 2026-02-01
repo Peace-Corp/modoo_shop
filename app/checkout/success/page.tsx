@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { useCart } from '@/contexts/CartContext';
+import { clearBrandCartFromSession } from '@/contexts/BrandCartContext';
 
 interface PaymentResult {
   success: boolean;
@@ -30,9 +31,17 @@ function PaymentSuccessContent() {
   const isConfirming = useRef(false);
   const hasConfirmed = useRef(false);
 
+  const brandId = searchParams.get('brandId');
+
   const clearCartOnce = useCallback(() => {
-    clearCart();
-  }, [clearCart]);
+    // Clear brand cart if this was a brand checkout
+    if (brandId) {
+      clearBrandCartFromSession(brandId);
+    } else {
+      // Clear global cart for regular checkout
+      clearCart();
+    }
+  }, [clearCart, brandId]);
 
   useEffect(() => {
     // Prevent duplicate calls from React strict mode or re-renders

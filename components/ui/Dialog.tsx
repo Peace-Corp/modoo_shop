@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 interface DialogProps {
@@ -10,18 +10,29 @@ interface DialogProps {
 }
 
 export function Dialog({ open, onClose, children }: DialogProps) {
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
   if (!open) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/50 transition-opacity"
+        className="fixed inset-0 bg-black/50 transition-opacity animate-in fade-in duration-200"
         onClick={onClose}
         aria-hidden="true"
       />
       {/* Dialog Content */}
-      <div className="relative z-50 w-full max-w-lg mx-4 animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative z-50 w-full animate-in fade-in zoom-in-95 duration-200 flex items-center justify-center">
         {children}
       </div>
     </div>,

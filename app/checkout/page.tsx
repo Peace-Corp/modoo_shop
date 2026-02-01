@@ -1,11 +1,13 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { Suspense, useState, useEffect, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { loadBrandCartFromSession, clearBrandCartFromSession } from '@/contexts/BrandCartContext';
+import { BrandCartItem, CartItem } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import TossPaymentWidget from '@/components/TossPaymentWidget';
@@ -70,13 +72,57 @@ interface JusoResult {
   bdNm: string;
 }
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter();
-  const { items, getTotal } = useCart();
+  const searchParams = useSearchParams();
+  const brandId = searchParams.get('brandId');
+
+  const { items: globalCartItems, getTotal: getGlobalTotal, clearCart: clearGlobalCart } = useCart();
   const { user } = useAuth();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('toss');
   const [step, setStep] = useState<'info' | 'payment'>('info');
   const [shippingType, setShippingType] = useState<ShippingType>('domestic');
+
+  // Brand cart state
+  const [brandCartItems, setBrandCartItems] = useState<BrandCartItem[]>([]);
+
+  // Load brand cart from sessionStorage if brandId is present
+  useEffect(() => {
+    if (brandId) {
+      const loadedItems = loadBrandCartFromSession(brandId);
+      setBrandCartItems(loadedItems);
+    }
+  }, [brandId]);
+
+  // Determine which items to use based on whether brandId is present
+  const isBrandCheckout = !!brandId;
+
+  // Convert brand cart items to cart item format for display
+  const items: CartItem[] = useMemo(() => {
+    if (isBrandCheckout) {
+      return brandCartItems.map(item => ({
+        product: item.product,
+        quantity: item.quantity,
+        variant: item.variant,
+      }));
+    }
+    return globalCartItems;
+  }, [isBrandCheckout, brandCartItems, globalCartItems]);
+
+  // Calculate total
+  const getTotal = useCallback(() => {
+    return items.reduce((total, item) => total + item.product.price * item.quantity, 0);
+  }, [items]);
+
+  // Clear cart function based on checkout type
+  const clearCart = useCallback(() => {
+    if (isBrandCheckout && brandId) {
+      clearBrandCartFromSession(brandId);
+      setBrandCartItems([]);
+    } else {
+      clearGlobalCart();
+    }
+  }, [isBrandCheckout, brandId, clearGlobalCart]);
 
   // Generate unique order ID: ORD-YYYYMMDD-XXXXXX
   const [orderId] = useState(() => {
@@ -618,7 +664,7 @@ export default function CheckoutPage() {
                           customerEmail={shippingType === 'domestic' ? shippingInfo.email : internationalShippingInfo.email}
                           customerName={shippingType === 'domestic' ? shippingInfo.name : internationalShippingInfo.name}
                           customerMobilePhone={shippingType === 'domestic' ? shippingInfo.phone : internationalShippingInfo.phone}
-                          successUrl={`${baseUrl}/checkout/success`}
+                          successUrl={`${baseUrl}/checkout/success${brandId ? `?brandId=${brandId}` : ''}`}
                           failUrl={`${baseUrl}/checkout/fail`}
                           onReady={() => console.log('Toss Payment widget ready')}
                           onError={(error) => console.error('Toss Payment error:', error)}
@@ -648,7 +694,7 @@ export default function CheckoutPage() {
                         onSuccess={(details) => {
                           console.log('PayPal payment success:', details);
                           // Redirect to unified success page
-                          router.push(`/checkout/success?paymentMethod=paypal&orderId=${orderId}`);
+                          router.push(`/checkout/success?paymentMethod=paypal&orderId=${orderId}${brandId ? `&brandId=${brandId}` : ''}`);
                         }}
                         onError={(error) => {
                           console.error('PayPal payment error:', error);
@@ -753,5 +799,28 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function CheckoutLoadingFallback() {
+  return (
+    <div className="py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+          <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h1 className="text-xl font-bold text-gray-900 mb-2">로딩 중...</h1>
+      </div>
+    </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<CheckoutLoadingFallback />}>
+      <CheckoutContent />
+    </Suspense>
   );
 }

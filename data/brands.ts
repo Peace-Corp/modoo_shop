@@ -71,6 +71,7 @@ function mapBrandFromDb(row: {
   slug: string;
   logo: string;
   banner: string;
+  detail_image?: string | null;
   description: string;
   featured: boolean | null;
 }): Brand {
@@ -80,6 +81,7 @@ function mapBrandFromDb(row: {
     slug: row.slug,
     logo: row.logo,
     banner: row.banner,
+    detailImage: row.detail_image ?? undefined,
     description: row.description,
     featured: row.featured ?? false,
   };
