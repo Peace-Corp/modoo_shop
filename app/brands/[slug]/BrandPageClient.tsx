@@ -37,6 +37,8 @@ export function BrandPageClient({ brand, products }: BrandPageClientProps) {
               <span className="text-gray-400">배너 이미지</span>
             </div>
           )}
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-linear-to-t to-40% from-black/70 to-transparent" />
         </div>
 
         {/* Centered Logo Overlay */}
@@ -57,7 +59,7 @@ export function BrandPageClient({ brand, products }: BrandPageClientProps) {
               </div>
             )}
           </div>
-          <h1 className="mt-2 text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
+          <h1 className="mt-2 text-lg sm:text-xl md:text-2xl font-bold text-white">
             {brand.name}
           </h1>
         </div>
@@ -84,11 +86,11 @@ export function BrandPageClient({ brand, products }: BrandPageClientProps) {
       </div>
 
       {/* Fixed Bottom Button */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-200">
-        <div className="max-w-4xl mx-auto">
+      <div className="fixed bottom-0 left-0 right-0 p-4">
+        <div className="max-w-md mx-auto">
           <button
             onClick={handleOpenCart}
-            className="w-full py-4 bg-gray-400 hover:bg-gray-500 text-white font-semibold rounded-lg transition-colors text-lg"
+            className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-full transition-colors text-lg"
           >
             구매하기
           </button>
