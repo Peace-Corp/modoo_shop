@@ -48,12 +48,15 @@ export async function getBrandBySlug(slug: string): Promise<Brand | undefined> {
   return mapBrandFromDb(data);
 }
 
-// Get featured brands
+// Get featured brands (only those within valid period)
 export async function getFeaturedBrands(): Promise<Brand[]> {
+  const now = new Date().toISOString();
+
   const { data, error } = await supabase
     .from('brands')
     .select('*')
     .eq('featured', true)
+    .or(`valid_period_end.is.null,valid_period_end.gt.${now}`)
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -71,8 +74,11 @@ function mapBrandFromDb(row: {
   slug: string;
   logo: string;
   banner: string;
+  detail_image?: string | null;
   description: string;
   featured: boolean | null;
+  valid_period_start?: string | null;
+  valid_period_end?: string | null;
 }): Brand {
   return {
     id: row.id,
@@ -80,7 +86,10 @@ function mapBrandFromDb(row: {
     slug: row.slug,
     logo: row.logo,
     banner: row.banner,
+    detailImage: row.detail_image ?? undefined,
     description: row.description,
     featured: row.featured ?? false,
+    validPeriodStart: row.valid_period_start ?? undefined,
+    validPeriodEnd: row.valid_period_end ?? undefined,
   };
 }

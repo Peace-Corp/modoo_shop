@@ -71,6 +71,8 @@ export type Database = {
           name: string
           slug: string
           updated_at: string | null
+          valid_period_start: string | null
+          valid_period_end: string | null
         }
         Insert: {
           banner: string
@@ -83,6 +85,8 @@ export type Database = {
           name: string
           slug: string
           updated_at?: string | null
+          valid_period_start?: string | null
+          valid_period_end?: string | null
         }
         Update: {
           banner?: string
@@ -95,6 +99,8 @@ export type Database = {
           name?: string
           slug?: string
           updated_at?: string | null
+          valid_period_start?: string | null
+          valid_period_end?: string | null
         }
         Relationships: []
       }

@@ -35,8 +35,11 @@ export interface Brand {
   slug: string;
   logo: string;
   banner: string;
+  detailImage?: string;
   description: string;
   featured?: boolean;
+  validPeriodStart?: string;
+  validPeriodEnd?: string;
 }
 
 // User Types
@@ -69,6 +72,19 @@ export interface CartItem {
 export interface Cart {
   items: CartItem[];
   total: number;
+}
+
+// Brand Cart Types (for brand-specific cart modal)
+export interface BrandCartItem {
+  product: Product;
+  variant: ProductVariant;
+  quantity: number;
+}
+
+export interface BrandCart {
+  brandId: string;
+  brandName: string;
+  items: BrandCartItem[];
 }
 
 // Order Types
