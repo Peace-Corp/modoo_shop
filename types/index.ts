@@ -38,6 +38,8 @@ export interface Brand {
   detailImage?: string;
   description: string;
   featured?: boolean;
+  validPeriodStart?: string;
+  validPeriodEnd?: string;
 }
 
 // User Types
