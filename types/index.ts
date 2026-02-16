@@ -112,6 +112,18 @@ export interface HeroBanner {
   imageLink: string;
 }
 
+// Brand Hero Banner Types
+export interface BrandHeroBanner {
+  id: string;
+  brandId: string;
+  title: string;
+  subtitle?: string;
+  link?: string;
+  color?: string;
+  displayOrder: number;
+  imageLink: string;
+}
+
 // Admin Dashboard Types
 export interface SalesData {
   date: string;
