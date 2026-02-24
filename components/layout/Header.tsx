@@ -37,19 +37,19 @@ export function Header() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
+              <Link href="/" className="text-black hover:text-indigo-600 transition-colors font-medium">
                 홈
               </Link>
-              <Link href="/brands" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
+              <Link href="/brands" className="text-black hover:text-indigo-600 transition-colors font-medium">
                 브랜드
               </Link>
-              <Link href="/search" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
+              <Link href="/search" className="text-black hover:text-indigo-600 transition-colors font-medium">
                 검색
               </Link>
-              <Link href="/contact" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
+              <Link href="/contact" className="text-black hover:text-indigo-600 transition-colors font-medium">
                 고객센터
               </Link>
-              <Link href="/orders" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
+              <Link href="/orders" className="text-black hover:text-indigo-600 transition-colors font-medium">
                 주문조회
               </Link>
             </nav>
@@ -57,14 +57,14 @@ export function Header() {
             {/* Right Side Icons */}
             <div className="flex items-center space-x-4">
               {/* Search Icon (Mobile) */}
-              <Link href="/search" className="md:hidden p-2 text-gray-600 hover:text-indigo-600">
+              <Link href="/search" className="md:hidden p-2 text-black hover:text-indigo-600">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </Link>
 
               {/* Cart Button */}
-              <Link href="/cart" className="relative p-2 text-gray-600 hover:text-indigo-600 transition-colors">
+              <Link href="/cart" className="relative p-2 text-black hover:text-indigo-600 transition-colors">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
@@ -78,7 +78,7 @@ export function Header() {
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setIsMenuOpen(true)}
-                className="md:hidden p-2 text-gray-600"
+                className="md:hidden p-2 text-black"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -120,7 +120,7 @@ export function Header() {
         <nav className="flex flex-col p-4">
           <Link
             href="/"
-            className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-3 rounded-lg transition-colors"
+            className="flex items-center gap-3 text-black hover:text-indigo-600 hover:bg-indigo-50 px-4 py-3 rounded-lg transition-colors"
             onClick={() => setIsMenuOpen(false)}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,7 +130,7 @@ export function Header() {
           </Link>
           <Link
             href="/brands"
-            className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-3 rounded-lg transition-colors"
+            className="flex items-center gap-3 text-black hover:text-indigo-600 hover:bg-indigo-50 px-4 py-3 rounded-lg transition-colors"
             onClick={() => setIsMenuOpen(false)}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,7 +140,7 @@ export function Header() {
           </Link>
           <Link
             href="/search"
-            className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-3 rounded-lg transition-colors"
+            className="flex items-center gap-3 text-black hover:text-indigo-600 hover:bg-indigo-50 px-4 py-3 rounded-lg transition-colors"
             onClick={() => setIsMenuOpen(false)}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,7 +150,7 @@ export function Header() {
           </Link>
           <Link
             href="/contact"
-            className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-3 rounded-lg transition-colors"
+            className="flex items-center gap-3 text-black hover:text-indigo-600 hover:bg-indigo-50 px-4 py-3 rounded-lg transition-colors"
             onClick={() => setIsMenuOpen(false)}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,7 +160,7 @@ export function Header() {
           </Link>
           <Link
             href="/orders"
-            className="flex items-center gap-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 px-4 py-3 rounded-lg transition-colors"
+            className="flex items-center gap-3 text-black hover:text-indigo-600 hover:bg-indigo-50 px-4 py-3 rounded-lg transition-colors"
             onClick={() => setIsMenuOpen(false)}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
