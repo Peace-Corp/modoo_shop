@@ -14,6 +14,8 @@ interface CreateOrderRequest {
   orderName: string;
   total: number;
   paymentMethod: 'toss' | 'paypal';
+  deliveryMethod: 'domestic' | 'international' | 'pickup';
+  shippingCost: number;
   customerName: string;
   customerEmail: string;
   customerPhone: string;
@@ -35,6 +37,8 @@ export async function POST(request: NextRequest) {
       orderName,
       total,
       paymentMethod,
+      deliveryMethod,
+      shippingCost,
       customerName,
       customerEmail,
       customerPhone,
@@ -62,9 +66,11 @@ export async function POST(request: NextRequest) {
       .from('orders')
       .insert({
         id: orderId,
-        user_id: userId || null, // null for guest/anonymous checkout
+        user_id: userId || null,
         total,
         payment_method: paymentMethod,
+        delivery_method: deliveryMethod || 'domestic',
+        shipping_cost: shippingCost || 0,
         payment_status: 'pending',
         status: 'pending',
         customer_name: customerName,

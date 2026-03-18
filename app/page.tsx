@@ -18,13 +18,13 @@ export default async function HomePage() {
   const brandMap = new Map(allBrands.map(b => [b.id, b]));
 
   return (
-    <div className='max-w-300 mx-auto'>
+    <div className='max-w-300 mx-auto space-y-4 sm:space-y-6 md:space-y-10 pb-4 sm:pb-6 md:pb-10'>
       {/* Hero Section */}
       <HeroBanner />
 
       {/* Active Brands */}
-      <section className="py-4 sm:py-6 md:py-10">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
+      <section>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
           <div className="flex justify-between items-end mb-4 sm:mb-6 md:mb-10">
             <div>
               <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-900">입점 브랜드</h2>
@@ -49,8 +49,8 @@ export default async function HomePage() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-4 sm:py-6 md:py-10">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
+      <section>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
           <div className="flex justify-between items-end mb-4 sm:mb-6 md:mb-10">
             <div>
               <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-900">추천 상품</h2>

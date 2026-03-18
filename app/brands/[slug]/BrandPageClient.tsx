@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Brand, Product } from '@/types';
-import { useBrandCart } from '@/contexts/BrandCartContext';
+import { useBrandCart, saveBrandDeliveryOptions } from '@/contexts/BrandCartContext';
 import { BrandCartModal } from '@/components/brands/BrandCartModal';
 
 interface BrandPageClientProps {
@@ -16,64 +17,66 @@ function isExpired(validPeriodEnd?: string): boolean {
   return new Date(validPeriodEnd) < new Date();
 }
 
-function useDominantColor(imageUrl?: string) {
-  const [color, setColor] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!imageUrl) return;
-    const img = new window.Image();
-    img.onload = () => {
-      try {
-        const canvas = document.createElement('canvas');
-        canvas.width = 10;
-        canvas.height = 10;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-        ctx.drawImage(img, 0, 0, 10, 10);
-        const { data } = ctx.getImageData(0, 0, 10, 10);
-        let r = 0, g = 0, b = 0, count = 0;
-        for (let i = 0; i < data.length; i += 4) {
-          r += data[i];
-          g += data[i + 1];
-          b += data[i + 2];
-          count++;
-        }
-        setColor(
-          `${Math.round(r / count)}, ${Math.round(g / count)}, ${Math.round(b / count)}`
-        );
-      } catch {
-        // Canvas security error — silently ignore
-      }
-    };
-    // Route through Next.js image proxy to avoid CORS issues
-    img.src = `/_next/image?url=${encodeURIComponent(imageUrl)}&w=16&q=10`;
-  }, [imageUrl]);
-
-  return color;
+function isLightColor(hex: string): boolean {
+  const c = hex.replace('#', '');
+  const r = parseInt(c.substring(0, 2), 16);
+  const g = parseInt(c.substring(2, 4), 16);
+  const b = parseInt(c.substring(4, 6), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 150;
 }
 
 export function BrandPageClient({ brand, products }: BrandPageClientProps) {
+  const router = useRouter();
   const { openCart } = useBrandCart();
   const expired = isExpired(brand.validPeriodEnd);
-  const dominantColor = useDominantColor(brand.banner);
+  const light = brand.brandColor ? isLightColor(brand.brandColor) : true;
 
   useEffect(() => {
-    if (!dominantColor) return;
+    if (!brand.brandColor) return;
     document.body.style.transition = 'background 0.5s';
-    document.body.style.background = `rgba(${dominantColor}, 0.12)`;
+    document.body.style.background = brand.brandColor;
     return () => {
       document.body.style.background = '';
       document.body.style.transition = '';
     };
-  }, [dominantColor]);
+  }, [brand.brandColor]);
+
+  // Hide global header/footer on brand pages
+  useEffect(() => {
+    const header = document.querySelector('header');
+    const footer = document.querySelector('footer');
+    if (header) header.style.display = 'none';
+    if (footer) footer.style.display = 'none';
+    return () => {
+      if (header) header.style.display = '';
+      if (footer) footer.style.display = '';
+    };
+  }, []);
 
   const handleOpenCart = () => {
     if (expired) return;
+    saveBrandDeliveryOptions(brand.id, {
+      domestic: brand.deliveryDomesticEnabled ? { enabled: true, price: brand.deliveryDomesticPrice ?? 3000 } : null,
+      international: brand.deliveryInternationalEnabled ? { enabled: true, price: brand.deliveryInternationalPrice ?? 15000 } : null,
+      pickup: brand.deliveryPickupEnabled ? { enabled: true, price: brand.deliveryPickupPrice ?? 0, address: brand.deliveryPickupAddress ?? '' } : null,
+    });
     openCart(brand.id, brand.name, products);
   };
 
   return (
-    <div className="pb-20 max-w-5xl mx-auto px-4 pt-6 space-y-10 relative">
+    <div className="pb-20 max-w-5xl mx-auto px-4 space-y-10 relative">
+      {/* Brand Header */}
+      <div className="sticky top-0 z-50 -mx-4 px-3 py-1.5">
+        <button
+          onClick={() => router.back()}
+          className={`p-1.5 rounded-full transition-colors ${light ? 'text-black hover:bg-black/10' : 'text-white hover:bg-white/10'}`}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+      </div>
+
       {/* Banner Section with centered logo */}
       <div className="relative bg-gray-200 rounded-xl overflow-hidden">
         {/* Banner wrapper with aspect ratio */}

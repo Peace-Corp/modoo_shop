@@ -92,11 +92,19 @@ function mapBrandFromDb(row: {
   slug: string;
   logo: string;
   banner: string;
+  brand_color?: string | null;
   detail_image?: string | null;
   description: string;
   featured: boolean | null;
   valid_period_start?: string | null;
   valid_period_end?: string | null;
+  delivery_domestic_enabled?: boolean | null;
+  delivery_domestic_price?: number | null;
+  delivery_international_enabled?: boolean | null;
+  delivery_international_price?: number | null;
+  delivery_pickup_enabled?: boolean | null;
+  delivery_pickup_price?: number | null;
+  delivery_pickup_address?: string | null;
 }): Brand {
   return {
     id: row.id,
@@ -104,10 +112,18 @@ function mapBrandFromDb(row: {
     slug: row.slug,
     logo: row.logo,
     banner: row.banner,
+    brandColor: row.brand_color ?? undefined,
     detailImage: row.detail_image ?? undefined,
     description: row.description,
     featured: row.featured ?? false,
     validPeriodStart: row.valid_period_start ?? undefined,
     validPeriodEnd: row.valid_period_end ?? undefined,
+    deliveryDomesticEnabled: row.delivery_domestic_enabled ?? true,
+    deliveryDomesticPrice: row.delivery_domestic_price ?? 3000,
+    deliveryInternationalEnabled: row.delivery_international_enabled ?? false,
+    deliveryInternationalPrice: row.delivery_international_price ?? 15000,
+    deliveryPickupEnabled: row.delivery_pickup_enabled ?? false,
+    deliveryPickupPrice: row.delivery_pickup_price ?? 0,
+    deliveryPickupAddress: row.delivery_pickup_address ?? undefined,
   };
 }

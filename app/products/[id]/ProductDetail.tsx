@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/Button';
 import { ProductCard } from '@/components/products/ProductCard';
 import { Product, Brand, ProductVariant } from '@/types';
@@ -15,10 +14,7 @@ interface ProductDetailProps {
 }
 
 export default function ProductDetail({ product, brand, relatedProducts }: ProductDetailProps) {
-  const { addToCart } = useCart();
-  const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [isAdded, setIsAdded] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
 
   const hasVariants = product.variants && product.variants.length > 0;
@@ -27,14 +23,6 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
-
-  const handleAddToCart = () => {
-    addToCart(product, quantity, selectedVariant ?? undefined);
-    setIsAdded(true);
-    setTimeout(() => setIsAdded(false), 2000);
-  };
-
-  const canAddToCart = selectedVariant !== null && selectedVariant.stock > 0;
 
   return (
     <div className="py-3 sm:py-8">
@@ -192,49 +180,16 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
               )}
             </div>
 
-            {/* Quantity & Add to Cart */}
-            <div className="flex items-center gap-2 sm:gap-4 mb-3 sm:mb-6">
-              <div className="flex items-center border border-gray-300 rounded-md sm:rounded-lg">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-9 h-9 sm:w-12 sm:h-12 flex items-center justify-center text-gray-600 hover:bg-gray-50"
-                  disabled={!canAddToCart}
-                >
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                  </svg>
-                </button>
-                <span className="w-8 sm:w-12 text-center text-sm sm:text-base font-medium">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(Math.min(currentStock, quantity + 1))}
-                  className="w-9 h-9 sm:w-12 sm:h-12 flex items-center justify-center text-gray-600 hover:bg-gray-50"
-                  disabled={!canAddToCart}
-                >
-                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                </button>
+            {/* Go to Brand Page */}
+            {brand && (
+              <div className="mb-3 sm:mb-6">
+                <Link href={`/brands/${brand.slug}`}>
+                  <Button size="lg" className="w-full text-xs sm:text-base py-2 sm:py-3">
+                    브랜드 페이지에서 구매하기
+                  </Button>
+                </Link>
               </div>
-              <Button
-                onClick={handleAddToCart}
-                size="lg"
-                className="flex-1 text-xs sm:text-base py-2 sm:py-3"
-                disabled={!canAddToCart}
-              >
-                {isAdded ? (
-                  <>
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    담기 완료
-                  </>
-                ) : hasVariants && !selectedVariant ? (
-                  '사이즈를 선택해주세요'
-                ) : (
-                  '장바구니 담기'
-                )}
-              </Button>
-            </div>
+            )}
 
             {/* Tags */}
             <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-6">
