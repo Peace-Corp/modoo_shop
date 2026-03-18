@@ -41,17 +41,6 @@ export function BrandPageClient({ brand, products }: BrandPageClientProps) {
     };
   }, [brand.brandColor]);
 
-  // Hide global header/footer on brand pages
-  useEffect(() => {
-    const header = document.querySelector('header');
-    const footer = document.querySelector('footer');
-    if (header) header.style.display = 'none';
-    if (footer) footer.style.display = 'none';
-    return () => {
-      if (header) header.style.display = '';
-      if (footer) footer.style.display = '';
-    };
-  }, []);
 
   const handleOpenCart = () => {
     if (expired) return;
@@ -152,7 +141,7 @@ export function BrandPageClient({ brand, products }: BrandPageClientProps) {
             className={`w-full py-4 font-semibold rounded-full transition-colors text-lg ${
               expired
                 ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-500 text-white'
+                : 'bg-white/60 backdrop-blur-md text-black hover:bg-white/80 border border-white/30'
             }`}
           >
             {expired ? '판매 기간 종료' : '구매하기'}
