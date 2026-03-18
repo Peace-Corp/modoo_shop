@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Dialog, DialogContent, DialogHeader, DialogBody, DialogFooter, DialogCloseButton } from '@/components/ui/Dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter, DialogCloseButton } from '@/components/ui/Dialog';
 import { BrandProductRow } from './BrandProductRow';
 import { useBrandCart } from '@/contexts/BrandCartContext';
 
@@ -9,11 +9,9 @@ export function BrandCartModal() {
   const router = useRouter();
   const {
     brandId,
-    brandName,
     products,
     isOpen,
     closeCart,
-    clearCart,
     getTotal,
     getItemCount,
   } = useBrandCart();
@@ -36,51 +34,41 @@ export function BrandCartModal() {
 
   return (
     <Dialog open={isOpen} onClose={closeCart}>
-      <DialogContent className="relative max-w-2xl">
-        {/* Header */}
+      <DialogContent className="relative w-full min-w-75 max-w-lg">
         <DialogHeader className="flex items-center justify-between">
-          <button
-            onClick={clearCart}
-            className="text-red-500 hover:text-red-600 text-sm font-medium"
-          >
-            장바구니 비우기
-          </button>
+          <DialogTitle>제품 주문</DialogTitle>
           <DialogCloseButton onClose={closeCart} />
         </DialogHeader>
 
-        {/* Body - Product List */}
         <DialogBody className="max-h-[60vh] overflow-y-auto">
-          <div className="space-y-3">
+          <div className="divide-y divide-gray-200">
             {products.map(product => (
               <BrandProductRow key={product.id} product={product} />
             ))}
 
             {products.length === 0 && (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-gray-500 text-sm">
                 상품이 없습니다.
               </div>
             )}
           </div>
         </DialogBody>
 
-        {/* Footer - Total and Checkout */}
         <DialogFooter className="flex-col items-stretch">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-gray-600">
-              총금액 <span className="text-xs text-gray-400">(배송비 제외)</span>
-            </span>
-            <span className="text-xl font-bold text-gray-900">{formatPrice(total)}</span>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm text-gray-600">총금액</span>
+            <span className="text-base font-bold text-gray-900">{formatPrice(total)}</span>
           </div>
           <button
             onClick={handleCheckout}
             disabled={itemCount === 0}
-            className={`w-full py-3 rounded-lg font-semibold text-white transition-colors ${
+            className={`w-full py-3 rounded-lg text-sm font-semibold text-white transition-colors ${
               itemCount === 0
                 ? 'bg-gray-300 cursor-not-allowed'
                 : 'bg-gray-900 hover:bg-gray-800'
             }`}
           >
-            결제하기
+            구매하기
           </button>
         </DialogFooter>
       </DialogContent>

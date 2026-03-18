@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Brand, Product } from '@/types';
 import { useBrandCart } from '@/contexts/BrandCartContext';
@@ -15,9 +16,56 @@ function isExpired(validPeriodEnd?: string): boolean {
   return new Date(validPeriodEnd) < new Date();
 }
 
+function useDominantColor(imageUrl?: string) {
+  const [color, setColor] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!imageUrl) return;
+    const img = new window.Image();
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = 10;
+        canvas.height = 10;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        ctx.drawImage(img, 0, 0, 10, 10);
+        const { data } = ctx.getImageData(0, 0, 10, 10);
+        let r = 0, g = 0, b = 0, count = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          r += data[i];
+          g += data[i + 1];
+          b += data[i + 2];
+          count++;
+        }
+        setColor(
+          `${Math.round(r / count)}, ${Math.round(g / count)}, ${Math.round(b / count)}`
+        );
+      } catch {
+        // Canvas security error — silently ignore
+      }
+    };
+    // Route through Next.js image proxy to avoid CORS issues
+    img.src = `/_next/image?url=${encodeURIComponent(imageUrl)}&w=16&q=10`;
+  }, [imageUrl]);
+
+  return color;
+}
+
 export function BrandPageClient({ brand, products }: BrandPageClientProps) {
   const { openCart } = useBrandCart();
   const expired = isExpired(brand.validPeriodEnd);
+  const dominantColor = useDominantColor(brand.banner);
+
+  useEffect(() => {
+    if (!dominantColor) return;
+    document.body.style.transition = 'background 0.5s';
+    document.body.style.background = `rgba(${dominantColor}, 0.12)`;
+    return () => {
+      document.body.style.background = '';
+      document.body.style.transition = '';
+    };
+  }, [dominantColor]);
 
   const handleOpenCart = () => {
     if (expired) return;
@@ -25,7 +73,7 @@ export function BrandPageClient({ brand, products }: BrandPageClientProps) {
   };
 
   return (
-    <div className="pb-20 max-w-5xl mx-auto pt-6 space-y-10 relative">
+    <div className="pb-20 max-w-5xl mx-auto px-4 pt-6 space-y-10 relative">
       {/* Banner Section with centered logo */}
       <div className="relative bg-gray-200 rounded-xl overflow-hidden">
         {/* Banner wrapper with aspect ratio */}

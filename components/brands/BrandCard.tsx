@@ -39,7 +39,7 @@ export function BrandCard({ brand, variant = 'small' }: BrandCardProps) {
       href={`/brands/${brand.slug}`}
       className="flex flex-col items-center w-fit"
     >
-      <div className="size-20 sm:size-28 rounded-full shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
+      <div className="size-14 sm:size-20 md:size-28 rounded-full shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
         <Image
           src={brand.logo}
           alt={brand.name}
@@ -49,7 +49,7 @@ export function BrandCard({ brand, variant = 'small' }: BrandCardProps) {
           className="object-cover w-full h-full"
         />
       </div>
-      <h3 className="font-semibold text-black/90 text-sm sm:text-lg">{brand.name}</h3>
+      <h3 className="font-semibold text-black/90 text-xs sm:text-sm md:text-lg">{brand.name}</h3>
     </Link>
   );
 }

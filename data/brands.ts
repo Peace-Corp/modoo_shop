@@ -67,6 +67,24 @@ export async function getFeaturedBrands(): Promise<Brand[]> {
   return data.map(mapBrandFromDb);
 }
 
+// Get all brands within valid period (not expired)
+export async function getActiveBrands(): Promise<Brand[]> {
+  const now = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from('brands')
+    .select('*')
+    .or(`valid_period_end.is.null,valid_period_end.gt.${now}`)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching active brands:', error);
+    return [];
+  }
+
+  return data.map(mapBrandFromDb);
+}
+
 // Map database row to Brand type
 function mapBrandFromDb(row: {
   id: string;
