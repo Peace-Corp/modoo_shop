@@ -17,6 +17,10 @@ export default async function HomePage() {
   // Create brand lookup map
   const brandMap = new Map(allBrands.map(b => [b.id, b]));
 
+  // Filter out products whose brand selling period has ended
+  const activeBrandIds = new Set(activeBrands.map(b => b.id));
+  const activeFeaturedProducts = featuredProducts.filter(p => activeBrandIds.has(p.brandId));
+
   return (
     <div className='max-w-300 mx-auto space-y-4 sm:space-y-6 md:space-y-10 pb-4 sm:pb-6 md:pb-10'>
       {/* Hero Section */}
@@ -67,7 +71,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-            {featuredProducts.map((product) => (
+            {activeFeaturedProducts.map((product) => (
               <ProductCard key={product.id} product={product} brand={brandMap.get(product.brandId)} />
             ))}
           </div>
