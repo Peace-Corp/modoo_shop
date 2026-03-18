@@ -140,7 +140,6 @@ export default function ProductDetail({ product, brand, relatedProducts }: Produ
                       key={variant.id}
                       onClick={() => {
                         setSelectedVariant(variant);
-                        setQuantity(1);
                       }}
                       disabled={variant.stock === 0}
                       className={`px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-md sm:rounded-lg border-2 text-xs sm:text-sm font-medium transition-all ${
