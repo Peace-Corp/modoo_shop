@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Brand, Product } from '@/types';
 import { useBrandCart, saveBrandDeliveryOptions } from '@/contexts/BrandCartContext';
 import { BrandCartModal } from '@/components/brands/BrandCartModal';
@@ -26,7 +26,6 @@ function isLightColor(hex: string): boolean {
 }
 
 export function BrandPageClient({ brand, products }: BrandPageClientProps) {
-  const router = useRouter();
   const { openCart } = useBrandCart();
   const expired = isExpired(brand.validPeriodEnd);
   const light = brand.brandColor ? isLightColor(brand.brandColor) : true;
@@ -53,21 +52,21 @@ export function BrandPageClient({ brand, products }: BrandPageClientProps) {
   };
 
   return (
-    <div className="pb-20 max-w-5xl mx-auto px-4 space-y-10 relative">
+    <div className="pb-20 max-w-5xl mx-auto px-4 relative">
       {/* Brand Header */}
       <div className="sticky top-0 z-50 -mx-4 px-3 py-1.5">
-        <button
-          onClick={() => router.back()}
+        <Link
+          href="/"
           className={`p-1.5 rounded-full transition-colors ${light ? 'text-black hover:bg-black/10' : 'text-white hover:bg-white/10'}`}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2" />
           </svg>
-        </button>
+        </Link>
       </div>
 
       {/* Banner Section with centered logo */}
-      <div className="relative bg-gray-200 rounded-xl overflow-hidden">
+      <div className="relative bg-gray-200 rounded-xl overflow-hidden mt-10">
         {/* Banner wrapper with aspect ratio */}
         <div className="relative w-full aspect-[21/9] sm:aspect-[3/1]">
           {brand.banner ? (
@@ -113,7 +112,7 @@ export function BrandPageClient({ brand, products }: BrandPageClientProps) {
       </div>
 
       {/* Detail Image Section */}
-      <div className="bg-gray-200 rounded-xl">
+      <div className="bg-gray-200 rounded-xl mt-10">
         <div className="max-w-4xl mx-auto">
           {brand.detailImage ? (
             <Image

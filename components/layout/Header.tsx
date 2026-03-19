@@ -20,11 +20,11 @@ export function Header() {
   return (
     <>
       <header className="bg-white/40 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-12 md:h-14">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+          <div className="flex justify-between items-center h-12 md:h-13">
             {/* Logo */}
             <Link href="/" className="flex items-center">
-              <img src="/modoo_logo.png" alt="" className="w-[75px]" />
+              <img src="/modoo_logo.png" alt="" className="w-[65px]" />
             </Link>
 
             {/* Desktop Navigation */}
