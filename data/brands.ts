@@ -93,7 +93,8 @@ function mapBrandFromDb(row: {
   logo: string;
   banner: string;
   brand_color?: string | null;
-  detail_image?: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  order_detail_image?: any;
   description: string;
   featured: boolean | null;
   valid_period_start?: string | null;
@@ -113,7 +114,13 @@ function mapBrandFromDb(row: {
     logo: row.logo,
     banner: row.banner,
     brandColor: row.brand_color ?? undefined,
-    detailImage: row.detail_image ?? undefined,
+    detailImages: (() => {
+      const raw = row.order_detail_image;
+      if (!raw) return undefined;
+      if (typeof raw === 'string') return [raw];
+      if (Array.isArray(raw)) return raw as (string | string[])[];
+      return undefined;
+    })(),
     description: row.description,
     featured: row.featured ?? false,
     validPeriodStart: row.valid_period_start ?? undefined,

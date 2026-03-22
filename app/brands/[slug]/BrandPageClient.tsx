@@ -3,9 +3,14 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
 import { Brand, Product } from '@/types';
 import { useBrandCart, saveBrandDeliveryOptions } from '@/contexts/BrandCartContext';
 import { BrandCartModal } from '@/components/brands/BrandCartModal';
+
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 interface BrandPageClientProps {
   brand: Brand;
@@ -111,25 +116,59 @@ export function BrandPageClient({ brand, products }: BrandPageClientProps) {
         </div>
       </div>
 
-      {/* Detail Image Section */}
-      <div className="bg-gray-200 rounded-xl mt-10">
-        <div className="max-w-4xl mx-auto">
-          {brand.detailImage ? (
-            <Image
-              src={brand.detailImage}
-              alt="상세정보"
-              width={1200}
-              height={1600}
-              unoptimized
-              className="w-full h-auto"
-            />
-          ) : (
+      {/* Detail Images Section */}
+      {brand.detailImages && brand.detailImages.length > 0 ? (
+        <div className="mt-10 space-y-2">
+          {brand.detailImages.map((entry, index) =>
+            Array.isArray(entry) ? (
+              <div key={index} className="rounded-xl overflow-hidden">
+                <Swiper
+                  modules={[Pagination]}
+                  pagination={{
+                    clickable: true,
+                    bulletClass: 'swiper-pagination-bullet !bg-white/50 !w-1.5 !h-1.5',
+                    bulletActiveClass: '!bg-white !opacity-100',
+                  }}
+                  loop={entry.length > 1}
+                  className="w-full"
+                >
+                  {entry.map((img, imgIndex) => (
+                    <SwiperSlide key={imgIndex}>
+                      <Image
+                        src={img}
+                        alt={`상세정보 ${index + 1}-${imgIndex + 1}`}
+                        width={1200}
+                        height={1600}
+                        unoptimized
+                        className="w-full h-auto"
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+            ) : (
+              <div key={index} className="rounded-xl overflow-hidden">
+                <Image
+                  src={entry}
+                  alt={`상세정보 ${index + 1}`}
+                  width={1200}
+                  height={1600}
+                  unoptimized
+                  className="w-full h-auto"
+                />
+              </div>
+            )
+          )}
+        </div>
+      ) : (
+        <div className="bg-gray-200 rounded-xl mt-10">
+          <div className="max-w-4xl mx-auto">
             <div className="aspect-[3/4] flex items-center justify-center">
               <span className="text-gray-400 text-lg">상세정보 이미지</span>
             </div>
-          )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Fixed Bottom Button */}
       <div className="fixed bottom-0 left-0 right-0 p-4">

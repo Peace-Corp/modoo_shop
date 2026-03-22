@@ -36,7 +36,7 @@ export interface Brand {
   logo: string;
   banner: string;
   brandColor?: string;
-  detailImage?: string;
+  detailImages?: (string | string[])[];
   description: string;
   featured?: boolean;
   validPeriodStart?: string;
