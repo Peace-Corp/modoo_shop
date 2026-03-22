@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { Product, ProductVariant, BrandCartItem, BrandDeliveryOptions } from '@/types';
+import { getStorageKey } from '@/lib/utils';
 
 interface BrandCartContextType {
   brandId: string | null;
@@ -20,12 +21,6 @@ interface BrandCartContextType {
 }
 
 const BrandCartContext = createContext<BrandCartContextType | undefined>(undefined);
-
-const STORAGE_KEY_PREFIX = 'modoo_brand_cart_';
-
-function getStorageKey(brandId: string): string {
-  return `${STORAGE_KEY_PREFIX}${brandId}`;
-}
 
 export function BrandCartProvider({ children }: { children: ReactNode }) {
   const [brandId, setBrandId] = useState<string | null>(null);

@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogBody, DialogFooter, DialogCloseButton } from '@/components/ui/Dialog';
 import { BrandProductRow } from './BrandProductRow';
 import { useBrandCart } from '@/contexts/BrandCartContext';
+import { formatPrice } from '@/lib/utils';
 
 export function BrandCartModal() {
   const router = useRouter();
@@ -18,13 +19,6 @@ export function BrandCartModal() {
 
   const total = getTotal();
   const itemCount = getItemCount();
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('ko-KR', {
-      style: 'currency',
-      currency: 'KRW',
-    }).format(price);
-  };
 
   const handleCheckout = () => {
     if (itemCount === 0) return;

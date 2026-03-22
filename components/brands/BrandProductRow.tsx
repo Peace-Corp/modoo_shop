@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Product, ProductVariant } from '@/types';
 import { useBrandCart } from '@/contexts/BrandCartContext';
+import { formatPrice } from '@/lib/utils';
 
 const DEFAULT_VARIANT_ID = '__default__';
 
@@ -48,13 +49,6 @@ export function BrandProductRow({ product }: BrandProductRowProps) {
     if (currentQty > 0) {
       setQuantity(product.id, DEFAULT_VARIANT_ID, product, defaultVariant, currentQty - 1);
     }
-  };
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('ko-KR', {
-      style: 'currency',
-      currency: 'KRW',
-    }).format(price);
   };
 
   return (

@@ -1,5 +1,6 @@
 import { Brand } from '@/types';
 import { supabase } from '@/lib/supabase';
+import { parseDetailImages } from '@/lib/utils';
 
 // Fetch all brands from Supabase
 export async function getBrands(): Promise<Brand[]> {
@@ -114,13 +115,7 @@ function mapBrandFromDb(row: {
     logo: row.logo,
     banner: row.banner,
     brandColor: row.brand_color ?? undefined,
-    detailImages: (() => {
-      const raw = row.order_detail_image;
-      if (!raw) return undefined;
-      if (typeof raw === 'string') return [raw];
-      if (Array.isArray(raw)) return raw as (string | string[])[];
-      return undefined;
-    })(),
+    detailImages: parseDetailImages(row.order_detail_image),
     description: row.description,
     featured: row.featured ?? false,
     validPeriodStart: row.valid_period_start ?? undefined,
