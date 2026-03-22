@@ -35,11 +35,26 @@ export interface Brand {
   slug: string;
   logo: string;
   banner: string;
-  detailImage?: string;
+  brandColor?: string;
+  detailImages?: (string | string[])[];
   description: string;
   featured?: boolean;
   validPeriodStart?: string;
   validPeriodEnd?: string;
+  deliveryDomesticEnabled?: boolean;
+  deliveryDomesticPrice?: number;
+  deliveryInternationalEnabled?: boolean;
+  deliveryInternationalPrice?: number;
+  deliveryPickupEnabled?: boolean;
+  deliveryPickupPrice?: number;
+  deliveryPickupAddress?: string;
+}
+
+// Brand Delivery Options (for checkout sessionStorage)
+export interface BrandDeliveryOptions {
+  domestic: { enabled: boolean; price: number } | null;
+  international: { enabled: boolean; price: number } | null;
+  pickup: { enabled: boolean; price: number; address: string } | null;
 }
 
 // User Types
@@ -62,18 +77,6 @@ export interface Address {
   phone: string;
 }
 
-// Cart Types
-export interface CartItem {
-  product: Product;
-  quantity: number;
-  variant?: ProductVariant;
-}
-
-export interface Cart {
-  items: CartItem[];
-  total: number;
-}
-
 // Brand Cart Types (for brand-specific cart modal)
 export interface BrandCartItem {
   product: Product;
@@ -91,11 +94,12 @@ export interface BrandCart {
 export interface Order {
   id: string;
   userId: string | null;
-  items: CartItem[];
   total: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   paymentMethod: 'toss' | 'paypal';
   paymentStatus: 'pending' | 'completed' | 'failed';
+  deliveryMethod: 'domestic' | 'international' | 'pickup';
+  shippingCost: number;
   shippingAddress: Address;
   createdAt: string;
   updatedAt: string;
@@ -108,6 +112,18 @@ export interface HeroBanner {
   subtitle?: string;
   link?: string;
   tags: string[];
+  displayOrder: number;
+  imageLink: string;
+}
+
+// Brand Hero Banner Types
+export interface BrandHeroBanner {
+  id: string;
+  brandId: string;
+  title: string;
+  subtitle?: string;
+  link?: string;
+  color?: string;
   displayOrder: number;
   imageLink: string;
 }

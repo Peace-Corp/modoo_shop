@@ -67,6 +67,24 @@ export async function getFeaturedBrands(): Promise<Brand[]> {
   return data.map(mapBrandFromDb);
 }
 
+// Get all brands within valid period (not expired)
+export async function getActiveBrands(): Promise<Brand[]> {
+  const now = new Date().toISOString();
+
+  const { data, error } = await supabase
+    .from('brands')
+    .select('*')
+    .or(`valid_period_end.is.null,valid_period_end.gt.${now}`)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching active brands:', error);
+    return [];
+  }
+
+  return data.map(mapBrandFromDb);
+}
+
 // Map database row to Brand type
 function mapBrandFromDb(row: {
   id: string;
@@ -74,11 +92,20 @@ function mapBrandFromDb(row: {
   slug: string;
   logo: string;
   banner: string;
-  detail_image?: string | null;
+  brand_color?: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  order_detail_image?: any;
   description: string;
   featured: boolean | null;
   valid_period_start?: string | null;
   valid_period_end?: string | null;
+  delivery_domestic_enabled?: boolean | null;
+  delivery_domestic_price?: number | null;
+  delivery_international_enabled?: boolean | null;
+  delivery_international_price?: number | null;
+  delivery_pickup_enabled?: boolean | null;
+  delivery_pickup_price?: number | null;
+  delivery_pickup_address?: string | null;
 }): Brand {
   return {
     id: row.id,
@@ -86,10 +113,24 @@ function mapBrandFromDb(row: {
     slug: row.slug,
     logo: row.logo,
     banner: row.banner,
-    detailImage: row.detail_image ?? undefined,
+    brandColor: row.brand_color ?? undefined,
+    detailImages: (() => {
+      const raw = row.order_detail_image;
+      if (!raw) return undefined;
+      if (typeof raw === 'string') return [raw];
+      if (Array.isArray(raw)) return raw as (string | string[])[];
+      return undefined;
+    })(),
     description: row.description,
     featured: row.featured ?? false,
     validPeriodStart: row.valid_period_start ?? undefined,
     validPeriodEnd: row.valid_period_end ?? undefined,
+    deliveryDomesticEnabled: row.delivery_domestic_enabled ?? true,
+    deliveryDomesticPrice: row.delivery_domestic_price ?? 3000,
+    deliveryInternationalEnabled: row.delivery_international_enabled ?? false,
+    deliveryInternationalPrice: row.delivery_international_price ?? 15000,
+    deliveryPickupEnabled: row.delivery_pickup_enabled ?? false,
+    deliveryPickupPrice: row.delivery_pickup_price ?? 0,
+    deliveryPickupAddress: row.delivery_pickup_address ?? undefined,
   };
 }

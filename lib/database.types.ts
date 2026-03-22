@@ -62,6 +62,7 @@ export type Database = {
       brands: {
         Row: {
           banner: string
+          brand_color: string | null
           created_at: string | null
           description: string
           eng_name: string | null
@@ -76,6 +77,7 @@ export type Database = {
         }
         Insert: {
           banner: string
+          brand_color?: string | null
           created_at?: string | null
           description: string
           eng_name?: string | null
@@ -90,6 +92,7 @@ export type Database = {
         }
         Update: {
           banner?: string
+          brand_color?: string | null
           created_at?: string | null
           description?: string
           eng_name?: string | null
@@ -103,6 +106,56 @@ export type Database = {
           valid_period_end?: string | null
         }
         Relationships: []
+      }
+      brand_hero_banners: {
+        Row: {
+          brand_id: string
+          color: string | null
+          created_at: string | null
+          display_order: number | null
+          id: string
+          image_link: string
+          is_active: boolean | null
+          link: string | null
+          subtitle: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          brand_id: string
+          color?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          image_link: string
+          is_active?: boolean | null
+          link?: string | null
+          subtitle?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          brand_id?: string
+          color?: string | null
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          image_link?: string
+          is_active?: boolean | null
+          link?: string | null
+          subtitle?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_hero_banners_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       hero_banners: {
         Row: {

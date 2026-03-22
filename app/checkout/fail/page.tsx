@@ -41,11 +41,8 @@ function PaymentFailContent() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/checkout">
-              <Button>다시 결제하기</Button>
-            </Link>
-            <Link href="/cart">
-              <Button variant="outline">장바구니로</Button>
+            <Link href="/">
+              <Button>홈으로</Button>
             </Link>
           </div>
         </div>

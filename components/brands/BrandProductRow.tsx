@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { Product, ProductVariant } from '@/types';
 import { useBrandCart } from '@/contexts/BrandCartContext';
 
+const DEFAULT_VARIANT_ID = '__default__';
+
 interface BrandProductRowProps {
   product: Product;
 }
@@ -11,14 +13,7 @@ interface BrandProductRowProps {
 export function BrandProductRow({ product }: BrandProductRowProps) {
   const { setQuantity, getQuantity } = useBrandCart();
   const variants = product.variants ?? [];
-
-  // Check if any variant is selected
-  const hasSelections = variants.some(v => getQuantity(product.id, v.id) > 0);
-
-  // Get selected items for tags
-  const selectedItems = variants
-    .map(v => ({ variant: v, quantity: getQuantity(product.id, v.id) }))
-    .filter(item => item.quantity > 0);
+  const hasVariants = variants.length > 0;
 
   const handleIncrement = (variant: ProductVariant) => {
     const currentQty = getQuantity(product.id, variant.id);
@@ -34,8 +29,25 @@ export function BrandProductRow({ product }: BrandProductRowProps) {
     }
   };
 
-  const handleRemoveTag = (variant: ProductVariant) => {
-    setQuantity(product.id, variant.id, product, variant, 0);
+  // For products without variants, use a default variant
+  const defaultVariant: ProductVariant = {
+    id: DEFAULT_VARIANT_ID,
+    productId: product.id,
+    size: 'default',
+    stock: 999,
+    sortOrder: 0,
+  };
+
+  const handleDefaultIncrement = () => {
+    const currentQty = getQuantity(product.id, DEFAULT_VARIANT_ID);
+    setQuantity(product.id, DEFAULT_VARIANT_ID, product, defaultVariant, currentQty + 1);
+  };
+
+  const handleDefaultDecrement = () => {
+    const currentQty = getQuantity(product.id, DEFAULT_VARIANT_ID);
+    if (currentQty > 0) {
+      setQuantity(product.id, DEFAULT_VARIANT_ID, product, defaultVariant, currentQty - 1);
+    }
   };
 
   const formatPrice = (price: number) => {
@@ -46,15 +58,9 @@ export function BrandProductRow({ product }: BrandProductRowProps) {
   };
 
   return (
-    <div
-      className={`p-3 border rounded-lg transition-all ${
-        hasSelections
-          ? 'border-blue-500 ring-2 ring-blue-500 ring-opacity-50'
-          : 'border-gray-200'
-      }`}
-    >
+    <div className="py-4 first:pt-0 last:pb-0">
+      {/* Product Info */}
       <div className="flex gap-3">
-        {/* Product Image */}
         <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-lg overflow-hidden shrink-0">
           {product.images[0] ? (
             <Image
@@ -74,91 +80,94 @@ export function BrandProductRow({ product }: BrandProductRowProps) {
           )}
         </div>
 
-        {/* Product Info */}
         <div className="flex-1 min-w-0">
-          <h3 className="font-medium text-gray-900 text-sm sm:text-base truncate">
-            {product.name}
-          </h3>
-          <p className="text-sm sm:text-base font-semibold text-gray-900 mt-0.5">
-            {formatPrice(product.price)}
-          </p>
-
-          {/* Variant Selectors */}
-          {variants.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {variants.map(variant => {
-                const quantity = getQuantity(product.id, variant.id);
-                const isOutOfStock = variant.stock === 0;
-                const isAtMax = quantity >= variant.stock;
-
-                return (
-                  <div
-                    key={variant.id}
-                    className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs sm:text-sm ${
-                      isOutOfStock
-                        ? 'bg-gray-100 text-gray-400'
-                        : 'bg-gray-100 text-gray-700'
-                    }`}
-                  >
-                    <span className="font-medium">{variant.size}</span>
-                    <span className="text-gray-400">({variant.stock})</span>
-
-                    {!isOutOfStock && (
-                      <>
-                        <button
-                          onClick={() => handleDecrement(variant)}
-                          disabled={quantity === 0}
-                          className={`w-5 h-5 flex items-center justify-center rounded ${
-                            quantity === 0
-                              ? 'text-gray-300 cursor-not-allowed'
-                              : 'text-gray-600 hover:bg-gray-200'
-                          }`}
-                        >
-                          -
-                        </button>
-                        <span className="w-4 text-center font-medium">{quantity}</span>
-                        <button
-                          onClick={() => handleIncrement(variant)}
-                          disabled={isAtMax}
-                          className={`w-5 h-5 flex items-center justify-center rounded ${
-                            isAtMax
-                              ? 'text-gray-300 cursor-not-allowed'
-                              : 'text-gray-600 hover:bg-gray-200'
-                          }`}
-                        >
-                          +
-                        </button>
-                      </>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          {/* Selected Items Tags */}
-          {selectedItems.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-2">
-              {selectedItems.map(({ variant, quantity }) => (
-                <span
-                  key={variant.id}
-                  className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs"
-                >
-                  {variant.size} x {quantity}
-                  <button
-                    onClick={() => handleRemoveTag(variant)}
-                    className="hover:text-blue-900"
-                  >
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </span>
-              ))}
-            </div>
-          )}
+          <h3 className="font-medium text-gray-900 text-sm truncate">{product.name}</h3>
+          <p className="text-sm font-semibold text-gray-900 mt-0.5">{formatPrice(product.price)}</p>
         </div>
       </div>
+
+      {/* No variants - simple quantity control */}
+      {!hasVariants && (
+        <div className="flex items-center gap-2 mt-3">
+          <span className="text-xs text-gray-500">수량</span>
+          <QuantityControl
+            quantity={getQuantity(product.id, DEFAULT_VARIANT_ID)}
+            onIncrement={handleDefaultIncrement}
+            onDecrement={handleDefaultDecrement}
+          />
+        </div>
+      )}
+
+      {/* Variant rows */}
+      {hasVariants && (
+        <div className="mt-3 space-y-2">
+          {variants.map(variant => {
+            const quantity = getQuantity(product.id, variant.id);
+            const isOutOfStock = variant.stock === 0;
+
+            return (
+              <div
+                key={variant.id}
+                className="flex items-center justify-between bg-gray-100 rounded-full px-4 py-2"
+              >
+                <span className="text-sm font-medium text-gray-700">{variant.size}</span>
+                {isOutOfStock ? (
+                  <span className="text-xs text-red-400 font-medium">품절</span>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <QuantityControl
+                      quantity={quantity}
+                      onIncrement={() => handleIncrement(variant)}
+                      onDecrement={() => handleDecrement(variant)}
+                      disableIncrement={quantity >= variant.stock}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function QuantityControl({
+  quantity,
+  onIncrement,
+  onDecrement,
+  disableIncrement = false,
+}: {
+  quantity: number;
+  onIncrement: () => void;
+  onDecrement: () => void;
+  disableIncrement?: boolean;
+}) {
+  return (
+    <div className="flex items-center gap-1">
+      <button
+        onClick={onDecrement}
+        disabled={quantity === 0}
+        className={`w-7 h-7 flex items-center justify-center rounded-full text-sm font-medium ${
+          quantity === 0
+            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+        }`}
+      >
+        &minus;
+      </button>
+      <span className="w-6 text-center text-sm font-medium">{quantity}</span>
+      <button
+        onClick={onIncrement}
+        disabled={disableIncrement}
+        className={`w-7 h-7 flex items-center justify-center rounded-full text-sm font-medium ${
+          disableIncrement
+            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+        }`}
+      >
+        +
+      </button>
     </div>
   );
 }

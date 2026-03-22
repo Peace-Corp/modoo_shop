@@ -181,11 +181,12 @@ function mapOrderFromDb(row: OrderRow): Order {
   return {
     id: row.id,
     userId: row.user_id,
-    items: [], // Order items would need to be fetched separately if needed
     total: row.total,
     status: row.status as Order['status'],
     paymentMethod: row.payment_method as Order['paymentMethod'],
     paymentStatus: row.payment_status as Order['paymentStatus'],
+    deliveryMethod: 'domestic' as Order['deliveryMethod'],
+    shippingCost: 0,
     shippingAddress: {
       street: row.shipping_street,
       city: row.shipping_city,

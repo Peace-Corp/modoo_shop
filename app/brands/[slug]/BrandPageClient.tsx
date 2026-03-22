@@ -1,9 +1,16 @@
 'use client';
 
+import { useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
 import { Brand, Product } from '@/types';
-import { useBrandCart } from '@/contexts/BrandCartContext';
+import { useBrandCart, saveBrandDeliveryOptions } from '@/contexts/BrandCartContext';
 import { BrandCartModal } from '@/components/brands/BrandCartModal';
+
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 interface BrandPageClientProps {
   brand: Brand;
@@ -15,19 +22,56 @@ function isExpired(validPeriodEnd?: string): boolean {
   return new Date(validPeriodEnd) < new Date();
 }
 
+function isLightColor(hex: string): boolean {
+  const c = hex.replace('#', '');
+  const r = parseInt(c.substring(0, 2), 16);
+  const g = parseInt(c.substring(2, 4), 16);
+  const b = parseInt(c.substring(4, 6), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000 > 150;
+}
+
 export function BrandPageClient({ brand, products }: BrandPageClientProps) {
   const { openCart } = useBrandCart();
   const expired = isExpired(brand.validPeriodEnd);
+  const light = brand.brandColor ? isLightColor(brand.brandColor) : true;
+
+  useEffect(() => {
+    if (!brand.brandColor) return;
+    document.body.style.transition = 'background 0.5s';
+    document.body.style.background = brand.brandColor;
+    return () => {
+      document.body.style.background = '';
+      document.body.style.transition = '';
+    };
+  }, [brand.brandColor]);
+
 
   const handleOpenCart = () => {
     if (expired) return;
+    saveBrandDeliveryOptions(brand.id, {
+      domestic: brand.deliveryDomesticEnabled ? { enabled: true, price: brand.deliveryDomesticPrice ?? 3000 } : null,
+      international: brand.deliveryInternationalEnabled ? { enabled: true, price: brand.deliveryInternationalPrice ?? 15000 } : null,
+      pickup: brand.deliveryPickupEnabled ? { enabled: true, price: brand.deliveryPickupPrice ?? 0, address: brand.deliveryPickupAddress ?? '' } : null,
+    });
     openCart(brand.id, brand.name, products);
   };
 
   return (
-    <div className="pb-20 max-w-5xl mx-auto pt-6 space-y-10 relative">
+    <div className="pb-20 max-w-5xl mx-auto px-4 relative">
+      {/* Brand Header */}
+      <div className="sticky top-0 z-50 -mx-4 px-3 py-1.5">
+        <Link
+          href="/"
+          className={`p-1.5 rounded-full transition-colors ${light ? 'text-black hover:bg-black/10' : 'text-white hover:bg-white/10'}`}
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2" />
+          </svg>
+        </Link>
+      </div>
+
       {/* Banner Section with centered logo */}
-      <div className="relative bg-gray-200 rounded-xl overflow-hidden">
+      <div className="relative bg-gray-200 rounded-xl overflow-hidden mt-10">
         {/* Banner wrapper with aspect ratio */}
         <div className="relative w-full aspect-[21/9] sm:aspect-[3/1]">
           {brand.banner ? (
@@ -72,25 +116,59 @@ export function BrandPageClient({ brand, products }: BrandPageClientProps) {
         </div>
       </div>
 
-      {/* Detail Image Section */}
-      <div className="bg-gray-200 rounded-xl">
-        <div className="max-w-4xl mx-auto">
-          {brand.detailImage ? (
-            <Image
-              src={brand.detailImage}
-              alt="상세정보"
-              width={1200}
-              height={1600}
-              unoptimized
-              className="w-full h-auto"
-            />
-          ) : (
+      {/* Detail Images Section */}
+      {brand.detailImages && brand.detailImages.length > 0 ? (
+        <div className="mt-10 space-y-2">
+          {brand.detailImages.map((entry, index) =>
+            Array.isArray(entry) ? (
+              <div key={index} className="rounded-xl overflow-hidden">
+                <Swiper
+                  modules={[Pagination]}
+                  pagination={{
+                    clickable: true,
+                    bulletClass: 'swiper-pagination-bullet !bg-white/50 !w-1.5 !h-1.5',
+                    bulletActiveClass: '!bg-white !opacity-100',
+                  }}
+                  loop={entry.length > 1}
+                  className="w-full"
+                >
+                  {entry.map((img, imgIndex) => (
+                    <SwiperSlide key={imgIndex}>
+                      <Image
+                        src={img}
+                        alt={`상세정보 ${index + 1}-${imgIndex + 1}`}
+                        width={1200}
+                        height={1600}
+                        unoptimized
+                        className="w-full h-auto"
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+            ) : (
+              <div key={index} className="rounded-xl overflow-hidden">
+                <Image
+                  src={entry}
+                  alt={`상세정보 ${index + 1}`}
+                  width={1200}
+                  height={1600}
+                  unoptimized
+                  className="w-full h-auto"
+                />
+              </div>
+            )
+          )}
+        </div>
+      ) : (
+        <div className="bg-gray-200 rounded-xl mt-10">
+          <div className="max-w-4xl mx-auto">
             <div className="aspect-[3/4] flex items-center justify-center">
               <span className="text-gray-400 text-lg">상세정보 이미지</span>
             </div>
-          )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Fixed Bottom Button */}
       <div className="fixed bottom-0 left-0 right-0 p-4">
@@ -101,7 +179,7 @@ export function BrandPageClient({ brand, products }: BrandPageClientProps) {
             className={`w-full py-4 font-semibold rounded-full transition-colors text-lg ${
               expired
                 ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-500 text-white'
+                : 'bg-white/60 backdrop-blur-md text-black hover:bg-white/80 border border-white/30'
             }`}
           >
             {expired ? '판매 기간 종료' : '구매하기'}

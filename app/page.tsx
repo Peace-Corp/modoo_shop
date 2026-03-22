@@ -3,54 +3,32 @@ import { ProductCard } from '@/components/products/ProductCard';
 import { BrandCard } from '@/components/brands/BrandCard';
 import { HeroBanner } from '@/components/home/HeroBanner';
 import { getFeaturedProducts } from '@/data/products';
-import { getFeaturedBrands, getBrands } from '@/data/brands';
+import { getActiveBrands, getBrands } from '@/data/brands';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  const [featuredProducts, featuredBrands, allBrands] = await Promise.all([
+  const [featuredProducts, activeBrands, allBrands] = await Promise.all([
     getFeaturedProducts(),
-    getFeaturedBrands(),
+    getActiveBrands(),
     getBrands(),
   ]);
 
   // Create brand lookup map
   const brandMap = new Map(allBrands.map(b => [b.id, b]));
 
+  // Filter out products whose brand selling period has ended
+  const activeBrandIds = new Set(activeBrands.map(b => b.id));
+  const activeFeaturedProducts = featuredProducts.filter(p => activeBrandIds.has(p.brandId));
+
   return (
-    <div className='max-w-300 mx-auto'>
+    <div className='max-w-300 mx-auto space-y-4 sm:space-y-6 md:space-y-10 pb-4 sm:pb-6 md:pb-10'>
       {/* Hero Section */}
       <HeroBanner />
 
-      {/* Featured Products - 추천 상품을 브랜드보다 위로 이동 */}
-      <section className="py-4 sm:py-6 md:py-10">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
-          <div className="flex justify-between items-end mb-4 sm:mb-6 md:mb-10">
-            <div>
-              <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-900">추천 상품</h2>
-              <p className="mt-0.5 sm:mt-1 md:mt-2 text-xs sm:text-sm md:text-base text-gray-600">엄선된 인기 상품을 만나보세요</p>
-            </div>
-            <Link
-              href="/search"
-              className="text-[#0052cc] text-xs sm:text-sm md:text-base font-medium hover:underline flex items-center"
-            >
-              전체보기
-              <svg className="w-3 h-3 sm:w-4 sm:h-4 ml-0.5 sm:ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} brand={brandMap.get(product.brandId)} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Brands */}
-      <section className="py-4 sm:py-6 md:py-10">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
+      {/* Active Brands */}
+      <section>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
           <div className="flex justify-between items-end mb-4 sm:mb-6 md:mb-10">
             <div>
               <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-900">입점 브랜드</h2>
@@ -67,8 +45,34 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto pb-2">
-            {featuredBrands.map((brand) => (
+            {activeBrands.map((brand) => (
               <BrandCard key={brand.id} brand={brand} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products */}
+      <section>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
+          <div className="flex justify-between items-end mb-4 sm:mb-6 md:mb-10">
+            <div>
+              <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-900">추천 상품</h2>
+              <p className="mt-0.5 sm:mt-1 md:mt-2 text-xs sm:text-sm md:text-base text-gray-600">엄선된 인기 상품을 만나보세요</p>
+            </div>
+            <Link
+              href="/search"
+              className="text-[#0052cc] text-xs sm:text-sm md:text-base font-medium hover:underline flex items-center"
+            >
+              전체보기
+              <svg className="w-3 h-3 sm:w-4 sm:h-4 ml-0.5 sm:ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+            {activeFeaturedProducts.map((product) => (
+              <ProductCard key={product.id} product={product} brand={brandMap.get(product.brandId)} />
             ))}
           </div>
         </div>

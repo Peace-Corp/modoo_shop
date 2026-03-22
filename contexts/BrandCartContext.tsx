@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { Product, ProductVariant, BrandCartItem } from '@/types';
+import { Product, ProductVariant, BrandCartItem, BrandDeliveryOptions } from '@/types';
 
 interface BrandCartContextType {
   brandId: string | null;
@@ -185,4 +185,21 @@ export function loadBrandCartFromSession(brandId: string): BrandCartItem[] {
 export function clearBrandCartFromSession(brandId: string): void {
   if (typeof window === 'undefined') return;
   sessionStorage.removeItem(getStorageKey(brandId));
+  sessionStorage.removeItem(`modoo_brand_delivery_${brandId}`);
+}
+
+// Save brand delivery options to sessionStorage
+export function saveBrandDeliveryOptions(brandId: string, options: BrandDeliveryOptions): void {
+  if (typeof window === 'undefined') return;
+  sessionStorage.setItem(`modoo_brand_delivery_${brandId}`, JSON.stringify(options));
+}
+
+// Load brand delivery options from sessionStorage
+export function loadBrandDeliveryOptions(brandId: string): BrandDeliveryOptions | null {
+  if (typeof window === 'undefined') return null;
+  const saved = sessionStorage.getItem(`modoo_brand_delivery_${brandId}`);
+  if (saved) {
+    try { return JSON.parse(saved) as BrandDeliveryOptions; } catch { return null; }
+  }
+  return null;
 }

@@ -9,7 +9,7 @@ export async function HeroBanner() {
   }
 
   return (
-    <section className="relative aspect-21/9 overflow-hidden rounded-2xl md:mt-10 mx-2">
+    <section className="relative aspect-21/9 overflow-hidden rounded-2xl mx-2">
       <HeroBannerSwiper banners={banners} />
     </section>
   );
