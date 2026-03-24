@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
       .update({
         payment_status: 'completed',
         status: 'processing',
-        payment_key: paypalTransactionId,
+        payment_id: paypalTransactionId,
         updated_at: new Date().toISOString(),
       })
       .eq('id', orderId);
@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
 
       if (orderData) {
         const shippingAddress = [
-          orderData.shipping_street,
+          orderData.shipping_address_line_one,
           orderData.shipping_city,
           orderData.shipping_state,
           orderData.shipping_zip_code,

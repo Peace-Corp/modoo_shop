@@ -81,6 +81,7 @@ function CheckoutContent() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('toss');
   const [step, setStep] = useState<'info' | 'payment'>('info');
   const [shippingType, setShippingType] = useState<ShippingType>('domestic');
+  const [formError, setFormError] = useState<string | null>(null);
 
   // Brand cart & delivery options
   const [items, setItems] = useState<BrandCartItem[]>([]);
@@ -163,6 +164,11 @@ function CheckoutContent() {
       setInternationalShippingInfo(prev => ({ ...prev, email: user.email }));
     }
   }, [user]);
+
+  useEffect(() => {
+    if (formError) setFormError(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shippingInfo, internationalShippingInfo]);
 
   // Scroll to top when step changes
   useEffect(() => {
@@ -361,27 +367,52 @@ function CheckoutContent() {
     );
   }
 
+  const validatePhone = (phone: string, isDomestic: boolean): string | null => {
+    if (!/^\d+$/.test(phone)) {
+      return isDomestic
+        ? '전화번호는 숫자만 입력 가능합니다.'
+        : 'Phone number must contain only digits.';
+    }
+    if (isDomestic) {
+      if (!/^01\d{8,9}$/.test(phone)) {
+        return '올바른 휴대폰 번호를 입력해주세요. (예: 01012345678)';
+      }
+    } else {
+      if (phone.length < 8 || phone.length > 15) {
+        return 'Phone number must be between 8 and 15 digits.';
+      }
+    }
+    return null;
+  };
+
   const handleSubmitInfo = (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
 
     if (shippingType === 'pickup') {
       const { name, email, phone } = shippingInfo;
       if (!name.trim() || !email.trim() || !phone.trim()) {
-        alert('모든 필수 항목을 입력해주세요.');
+        setFormError('모든 필수 항목을 입력해주세요.');
         return;
       }
+      const phoneError = validatePhone(phone, true);
+      if (phoneError) { setFormError(phoneError); return; }
     } else if (shippingType === 'domestic') {
       const { name, email, phone, address, zipCode } = shippingInfo;
       if (!name.trim() || !email.trim() || !phone.trim() || !address.trim() || !zipCode.trim()) {
-        alert('모든 필수 항목을 입력해주세요.');
+        setFormError('모든 필수 항목을 입력해주세요.');
         return;
       }
+      const phoneError = validatePhone(phone, true);
+      if (phoneError) { setFormError(phoneError); return; }
     } else {
       const { name, email, phone, country, postalCode, state, province, addressLine1 } = internationalShippingInfo;
       if (!name.trim() || !email.trim() || !phone.trim() || !country || !postalCode.trim() || !state.trim() || !province.trim() || !addressLine1.trim()) {
-        alert('Please fill in all required fields.');
+        setFormError('Please fill in all required fields.');
         return;
       }
+      const phoneError = validatePhone(phone, false);
+      if (phoneError) { setFormError(phoneError); return; }
     }
 
     setStep('payment');
@@ -418,7 +449,7 @@ function CheckoutContent() {
           {/* Main Content */}
           <div className="lg:col-span-7">
             {step === 'info' && (
-              <form onSubmit={handleSubmitInfo}>
+              <form onSubmit={handleSubmitInfo} noValidate>
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-4 sm:mb-6">
                   <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">주문자 정보</h2>
                   <div className="space-y-3 sm:space-y-4">
@@ -684,6 +715,15 @@ function CheckoutContent() {
                     </>
                   )}
                 </div>
+
+                {formError && (
+                  <div className="mb-4 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2">
+                    <svg className="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p className="text-sm text-red-600">{formError}</p>
+                  </div>
+                )}
 
                 <Button type="submit" size="lg" className="w-full">
                   결제하기

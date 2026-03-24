@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     // Check if order is already completed to prevent duplicate confirmation
     const { data: existingOrder } = await supabase
       .from('orders')
-      .select('id, payment_status, payment_key, order_name, total, updated_at')
+      .select('id, payment_status, payment_id, order_name, total, updated_at')
       .eq('id', orderId)
       .single();
 
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         payment: {
-          paymentKey: existingOrder.payment_key,
+          paymentKey: existingOrder.payment_id,
           orderId: existingOrder.id,
           orderName: existingOrder.order_name,
           amount: existingOrder.total,
@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
       .from('orders')
       .update({
         payment_status: 'completed',
-        payment_key: data.paymentKey,
+        payment_id: data.paymentKey,
         status: 'processing',
         updated_at: new Date().toISOString(),
       })
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
 
       if (orderData) {
         const shippingAddress = [
-          orderData.shipping_street,
+          orderData.shipping_address_line_one,
           orderData.shipping_city,
           orderData.shipping_state,
           orderData.shipping_zip_code,

@@ -61,6 +61,31 @@ export async function POST(request: NextRequest) {
 
     const supabase = createServerClient();
 
+    // Idempotency: if the order already exists with pending payment, return success
+    const { data: existingOrder } = await supabase
+      .from('orders')
+      .select('id, total, status, payment_status')
+      .eq('id', orderId)
+      .single();
+
+    if (existingOrder) {
+      if (existingOrder.payment_status === 'pending') {
+        return NextResponse.json({
+          success: true,
+          order: {
+            id: existingOrder.id,
+            total: existingOrder.total,
+            status: existingOrder.status,
+            paymentStatus: existingOrder.payment_status,
+          },
+        });
+      }
+      return NextResponse.json(
+        { error: 'Order already processed' },
+        { status: 409 }
+      );
+    }
+
     // Create the order
     const { data: order, error: orderError } = await supabase
       .from('orders')
@@ -76,12 +101,12 @@ export async function POST(request: NextRequest) {
         customer_name: customerName,
         customer_email: customerEmail,
         order_name: orderName,
-        shipping_street: shippingStreet,
+        shipping_address_line_one: shippingStreet,
         shipping_city: shippingCity,
         shipping_state: shippingState,
         shipping_zip_code: shippingZipCode,
         shipping_country: shippingCountry,
-        shipping_phone: customerPhone,
+        customer_phone: customerPhone,
       })
       .select()
       .single();
