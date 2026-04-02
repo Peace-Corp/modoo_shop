@@ -24,7 +24,7 @@ interface Order {
   total: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
   payment_method: 'toss' | 'paypal';
-  payment_status: 'pending' | 'completed' | 'failed';
+  payment_status: 'pending' | 'completed' | 'failed' | 'refunded' | 'partially_refunded';
   order_name: string;
   customer_name: string;
   customer_email: string;
@@ -58,6 +58,8 @@ const paymentStatusLabels: Record<Order['payment_status'], string> = {
   pending: '결제 대기',
   completed: '결제 완료',
   failed: '결제 실패',
+  refunded: '환불 완료',
+  partially_refunded: '부분 환불',
 };
 
 export default function OrderLookupPage() {
